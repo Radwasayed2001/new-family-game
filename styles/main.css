@@ -1607,3 +1607,121 @@ body {
   padding-right: 0.5rem;  /* مساحة ليُرى شريط التمرير */
 }
 
+/* ---- Heads-Up Game ---- */
+#headsUpSettings .settings,
+#headsUpEndTurn .container {
+  max-width: 500px;
+  margin: 2rem auto;
+  text-align: center;
+}
+.setting-row {
+  margin: 1rem 0;
+}
+.checkbox-list {
+  list-style: none;
+  padding: 0;
+  text-align: left;
+}
+.checkbox-list li {
+  margin: .5rem 0;
+}
+#headsUpPassPhone .countdown-container,
+#headsUpSettings .settings h2 {
+  animation: fadeIn 0.5s ease-out;
+}
+.headsup-word {
+  font-size: 2.5rem;
+  margin: 2rem 0;
+  text-align: center;
+  color: #333;
+}
+.headsup-timer {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+.headsup-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+#btnCorrect, #btnSkip {
+  padding: .8rem 1.5rem;
+  font-size: 1.2rem;
+}
+#headsUpGameScreen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+/* ===== قواعد عامة ===== */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* أزرار اللعب فقط في شاشة الألعاب */
+#headsUpGameScreen .game-controls {
+  display: none;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+#headsUpGameScreen.active .game-controls {
+  display: flex;
+}
+
+/* تحسين أزرار ✓ و ✗ */
+#btnCorrect, #btnSkip {
+  width: 3rem;
+  height: 3rem;
+  font-size: 1.5rem;
+  border-radius: 50%;
+  border: none;
+  background: #6c63ff;
+  color: white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  transition: transform .1s;
+}
+#btnCorrect:active, #btnSkip:active { transform: scale(0.9); }
+
+/* شاشة التحدي */
+.timer-display {
+  font-size: 2rem;
+  text-align: center;
+  margin-top: 1rem;
+}
+.word-display {
+  font-size: 2.5rem;
+  text-align: center;
+  margin: 2rem 0;
+}
+
+/* شاشة النتائج */
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+.results-table th, .results-table td {
+  border: 1px solid #ddd;
+  padding: .5rem;
+  text-align: center;
+}
+.results-table th {
+  background: #f4f4f4;
+}
+
+/* أزرار عامة */
+.btn {
+  padding: .6rem 1.2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.btn-primary { background: #6c63ff; color: #fff; }
+.btn-secondary { background: #888; color: #fff; }
+
+/* إخفاء مؤقتًا أزرار الألعاب قبل العرض الكامل */
+#btnCorrect, #btnSkip { visibility: hidden; }
+#headsUpGameScreen.active #btnCorrect,
+#headsUpGameScreen.active #btnSkip { visibility: visible; }

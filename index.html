@@ -31,7 +31,7 @@
   </section>
   <!-- Jawwal on Head Rules Screen -->
 <!-- Jawwal on Head Rules Screen -->
-<section id="jawwalRulesScreen" class="screen">
+<section id="headsUpSettings" class="screen">
   <header class="game-header">
     <div class="container">
       <h1 class="game-header-title">🎲 لعبة: الجوال على الرأس 📱</h1>
@@ -47,8 +47,8 @@
         <h3>⏲️ زمن التحدي:</h3>
         <div class="slider-wrapper">
           <span>1:00</span>
-          <input id="jawwalTimeSlider" type="range" min="60" max="120" step="30" value="60">
-          <span>2:00</span>
+          <input id="timeSlider" type="range" min="60" max="120" step="30" value="60">
+          <span id="timeValue">1 دقيقة</span>
         </div>
         <small>اختر دقيقة، دقيقة ونصف، أو دقيقتين</small>
       </div>
@@ -57,29 +57,119 @@
       <div class="info-section">
         <h3>☐ إضافة مجموعات كلمات:</h3>
         <ul class="checkbox-list scrollable">
-          <li><input type="checkbox" id="opt-food" /> <label for="opt-food">أطعمة ومأكولات 🍲🍛 </label></li>
-          <li><input type="checkbox" id="opt-places" /> <label for="opt-places">أماكن 🎡🏰🏥 </label></li>
-          <li><input type="checkbox" id="opt-animals" /> <label for="opt-animals">حيوانات 🐟🐍🐯 </label></li>
-          <li><input type="checkbox" id="opt-clothes" /> <label for="opt-clothes">ملابس 👖👠🧢 </label></li>
-          <li><input type="checkbox" id="opt-produce" /> <label for="opt-produce">خضار وفواكه 🥬🍉🍓 </label></li>
-          <li><input type="checkbox" id="opt-drinks" /> <label for="opt-drinks">مشروبات 🧃☕🥛 </label></li>
-          <li><input type="checkbox" id="opt-household" /> <label for="opt-household">أشياء منزلية 🚽🔪🛋️ </label></li>
-          <li><input type="checkbox" id="opt-vehicles" /> <label for="opt-vehicles">مركبات ومواصلات 🚓🚎✈️ </label></li>
-          <li><input type="checkbox" id="opt-cities" /> <label for="opt-cities">مدن 🗼🕋🗽 </label></li>
-          <li><input type="checkbox" id="opt-cartoons" /> <label for="opt-cartoons">شخصيات كرتونية 👸🎞️👑 </label></li>
-          <li><input type="checkbox" id="opt-games" /> <label for="opt-games">ألعاب 🎳♟️🎲 </label></li>
-          <li><input type="checkbox" id="opt-jobs" /> <label for="opt-jobs">وظائف 👦👮👷 </label></li>
-          <li><input type="checkbox" id="opt-sports" /> <label for="opt-sports">رياضات ⚽🏀🤸 </label></li>
-          <li><input type="checkbox" id="opt-langs" /> <label for="opt-langs">لغات ولهجات 🗣️🌍 </label></li>
-          <li><input type="checkbox" id="opt-countries" /> <label for="opt-countries">دول 🇸🇦🇮🇶🇹🇳 </label></li>
+          <li>
+            <input type="checkbox" id="cat-food" value="food"/>
+            <label for="cat-food">أطعمة ومأكولات 🍲🍛</label>
+          </li>
+          <li>
+            <input type="checkbox" id="cat-places" value="places"/>
+            <label for="cat-places">أماكن 🎡🏰🏥</label>
+          </li>
+          <li>
+            <input type="checkbox" id="cat-animals" value="animals"/>
+            <label for="cat-animals">حيوانات 🐟🐍🐯</label>
+          </li>
+          <li>
+            <input type="checkbox" id="cat-clothes" value="clothes"/>
+            <label for="cat-clothes">ملابس 👖👠🧢</label>
+          </li>
+          <li>
+            <input type="checkbox" id="cat-produce" value="produce"/>
+            <label for="cat-produce">خضار وفواكه 🥬🍉🍓</label>
+          </li>
+          <li>
+            <input type="checkbox" id="cat-drinks" value="drinks"/>
+            <label for="cat-drinks">مشروبات 🧃☕🥛</label>
+          </li>
+          <li>
+            <input type="checkbox" id="cat-household" value="household"/>
+            <label for="cat-household">أشياء منزلية 🚽🔪🛋️</label>
+          </li>
+          <li>
+            <input type="checkbox" id="cat-vehicles" value="vehicles"/>
+            <label for="cat-vehicles">مركبات ومواصلات 🚓🚎✈️</label>
+          </li>
+          <li>
+            <input type="checkbox" id="cat-cities" value="cities"/>
+            <label for="cat-cities">مدن 🗼🕋🗽</label>
+          </li>
+          <li>
+            <input type="checkbox" id="cat-cartoons" value="cartoons"/>
+            <label for="cat-cartoons">شخصيات كرتونية 👸🎞️👑</label>
+          </li>
+          <li>
+            <input type="checkbox" id="cat-games" value="games"/>
+            <label for="cat-games">ألعاب 🎳♟️🎲</label>
+          </li>
+          <li>
+            <input type="checkbox" id="cat-jobs" value="jobs"/>
+            <label for="cat-jobs">وظائف 👦👮👷</label>
+          </li>
+          <li>
+            <input type="checkbox" id="cat-sports" value="sports"/>
+            <label for="cat-sports">رياضات ⚽🏀🤸</label>
+          </li>
+          <li>
+            <input type="checkbox" id="cat-langs" value="langs"/>
+            <label for="cat-langs">لغات ولهجات 🗣️🌍</label>
+          </li>
+          <li>
+            <input type="checkbox" id="cat-countries" value="countries"/>
+            <label for="cat-countries">دول 🇸🇦🇮🇶🇹🇳</label>
+          </li>
         </ul>
+        
       </div>
 
       <!-- زر البداية -->
       <div class="buttons-row">
-        <button id="backToGamesBtn" class="btn btn-secondary">🔙 العودة للقائمة</button>
-        <button id="startJawwalBtn" class="btn btn-primary">ابدأ ▶️</button>
+        <button id="backToGamesBtnJ" class="btn btn-secondary">🔙 العودة للقائمة</button>
+        <button id="startHeadsUp" class="btn btn-primary">ابدأ ▶️</button>
       </div>
+    </div>
+  </div>
+</section>
+<section id="headsUpPassPhone" class="screen">
+  <div class="container">
+    <div id="headsUpPlayerName" class="player-name-display"></div>
+    <div id="headsUpCount" class="countdown-number"></div>
+  </div>
+</section>
+
+<section id="headsUpGameScreen" class="screen">
+  <div class="container">
+    <div id="headsUpTimer" class="timer-display"></div>
+    <div id="headsUpWord" class="word-display"></div>
+    <div class="game-controls">
+      <button id="btnCorrect" class="btn ">✓</button>
+      <button id="btnSkip"    class="btn">✗</button>
+    </div>
+  </div>
+</section>
+
+<section id="headsUpEndTurn" class="screen">
+  <div class="container">
+    <h2>انتهى الوقت!</h2>
+    <p>عدد الكلمات الصحيحة: <span id="headsUpCountCorrect"></span></p>
+    <button id="btnNextPlayer" class="btn">التالي ▶️</button>
+  </div>
+</section>
+
+<section id="headsUpResults" class="screen">
+  <div class="container results-container">
+    <h1>🏆 النتائج النهائية</h1>
+    <table class="results-table">
+      <thead>
+        <tr><th>#</th><th>اللاعب</th><th>الكلمات المخمنة</th>
+          <th>النقاط</th>
+          <th>النقاط الكلية</th>
+        </tr>
+      </thead>
+      <tbody id="headsUpResultsBody"></tbody>
+    </table>
+    <div class="results-actions">
+      <button id="btnReplayHeadsUp" class="btn btn-primary">🔄 العب مرة أخرى</button>
+      <button id="btnBackHeadsUp"   class="btn btn-secondary">🏠 العودة للقائمة</button>
     </div>
   </div>
 </section>
@@ -806,5 +896,6 @@
   <script src="scripts/mafiaGame.js"></script>
   <script src="scripts/similarpic.js"></script>
   <script src="scripts/boxes.js"></script>
+  <script src="scripts/jawwal.js"></script>
 </body>
 </html>
