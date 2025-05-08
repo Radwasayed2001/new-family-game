@@ -1,17 +1,15 @@
-// scripts/headsUp.js
-// Dependencies: loadPlayers(), showScreen(id)
-
 document.addEventListener('DOMContentLoaded', () => {
   const players = loadPlayers();
-  let settings = { time: 60, categories: [] };
+  let settings       = { time: 60, categories: [] };
   let order = [], idx = 0;
-  let currentPlayer = 0, correctCount = 0;
+  let currentPlayer  = 0, correctCount = 0;
   let timerId = null, wordTimerId = null;
   const roundResults = [];
 
-  // حساسية الميل
-  const TILT_THRESHOLD = 40;
-  let tiltHandled = false;
+  // عتبة الميل بالنسبة للـ delta عن baseline
+  const TILT_THRESHOLD = 30;  
+  let baselineBeta = null;
+  let tiltHandled  = false;
 
   // DOM refs
   const timeSlider    = document.getElementById('timeSlider');
@@ -40,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     clearInterval(wordTimerId);
   }
 
-  // تحديث عرض قيمة السلايدر
+  // ضبط نص السلايدر
   timeSlider.addEventListener('input', e => {
     const v = +e.target.value;
     settings.time = v;
@@ -49,17 +47,15 @@ document.addEventListener('DOMContentLoaded', () => {
                                      : '2 دقائق';
   });
 
-  // زرّ العودة للقائمة
+  // العودة للقائمة
   backSettings.onclick = () => showScreen('gamesScreen');
 
-  // زرّ ابدأ
+  // زر/ابدأ
   startBtn.addEventListener('click', () => {
     settings.categories = cats.filter(c => c.checked).map(c => c.value);
     if (!settings.categories.length) {
-      alert('اختر مجموعة واحدة على الأقل!');
-      return;
+      return alert('اختر مجموعة واحدة على الأقل!');
     }
-    // حشوا الكلمات المختارة
     order = [];
     settings.categories.forEach(cat => order.push(...WORDS[cat]));
     shuffle(order);
@@ -69,12 +65,23 @@ document.addEventListener('DOMContentLoaded', () => {
     runTurn();
   });
 
-  // دالة كشف الميل
+  // معايرة نقطة المرجع وتصفير tiltHandled
+  function resetTilt() {
+    baselineBeta = null;
+    tiltHandled  = false;
+  }
+
+  // كشف الميل بالنسبة للـ baseline
   function onTilt(e) {
-    if (!tiltHandled && e.beta > TILT_THRESHOLD) {
+    if (baselineBeta === null) {
+      baselineBeta = e.beta;
+      return;
+    }
+    const delta = e.beta - baselineBeta;
+    if (!tiltHandled && delta > TILT_THRESHOLD) {
       tiltHandled = true;
       nextWord();
-      setTimeout(() => tiltHandled = false, 1000);
+      setTimeout(() => tiltHandled = false, 800);
     }
   }
 
@@ -85,6 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
     passName.textContent  = `📱 أعطِ الهاتف إلى: ${players[currentPlayer]}`;
     passCount.textContent = '3';
     showScreen('headsUpPassPhone');
+
     let c = 3;
     wordTimerId = setInterval(() => {
       passCount.textContent = --c;
@@ -95,25 +103,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1000);
   }
 
-  // بداية الجولة
+  // بدء الجولة
   function startRound() {
     clearTimers();
+    resetTilt();
     showScreen('headsUpGameScreen');
-    // فعّل أزرار ✓ و✗
+
+    // إظهار أزرار ✓ و✗
     btnCorrect.style.display = btnSkip.style.display = 'inline-block';
-    // استماع للحركة
+
+    // تفعيل مستمع الميل
     window.addEventListener('deviceorientation', onTilt);
 
     let timeLeft = settings.time;
     gameTimer.textContent = `⏰ ${timeLeft}s`;
     timerId = setInterval(() => {
-      gameTimer.textContent = `⏰ ${--timeLeft}s`;
+      timeLeft--;
+      gameTimer.textContent = `⏰ ${timeLeft}s`;
       if (timeLeft <= 0) endRound();
     }, 1000);
+
     nextWord();
   }
 
-  // الكلمة التالية
+  // عرض الكلمة التالية
   function nextWord() {
     if (idx >= order.length) {
       idx = 0;
@@ -122,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
     gameWord.textContent = order[idx++];
   }
 
-  // صحيح
+  // الإجابة صحيحة
   btnCorrect.addEventListener('click', () => {
     correctCount++;
     nextWord();
@@ -134,7 +147,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // نهاية الجولة
   function endRound() {
     clearTimers();
-    // ازالة الاستماع للميل وإخفاء الأزرار
     window.removeEventListener('deviceorientation', onTilt);
     btnCorrect.style.display = btnSkip.style.display = 'none';
 
@@ -149,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
     showScreen('headsUpEndTurn');
   }
 
-  // التالي أو عرض النتائج
+  // التالي أو النتائج
   nextPlayerBtn.addEventListener('click', () => {
     currentPlayer++;
     if (currentPlayer < players.length) runTurn();
@@ -176,11 +188,10 @@ document.addEventListener('DOMContentLoaded', () => {
   backGameBtn.onclick = () => showScreen('gamesScreen');
 });
 
-// مساعدة: تقليب مصفوفة
+// تقليب مصفوفة
 function shuffle(a) {
   return a.sort(() => Math.random() - 0.5);
 }
-
 
 const WORDS = {
   food: [
