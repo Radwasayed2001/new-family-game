@@ -1,8 +1,3 @@
-/* Global Box-Sizing to Prevent Overflow */
-* {
-  box-sizing: border-box;
-}
-
 /* Main Styles */
 :root {
   /* Color System */
@@ -43,22 +38,19 @@ body {
   display: flex;
   flex-direction: column;
   overflow-x: hidden; /* Prevent horizontal scrolling */
-  max-width: 100%; /* Ensure body doesn't exceed viewport */
 }
 
 .container {
   max-width: 480px;
   margin: 0 auto;
   padding: 1rem;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
-  max-width: 100%; /* Ensure container stays within viewport */
+  box-sizing: border-box; /* Ensure padding doesn't cause overflow */
 }
 
 /* Screen Management */
 .screen {
   min-height: 100vh;
   width: 100%;
-  max-width: 100%; /* Prevent overflow */
   position: absolute;
   top: 0;
   left: 0;
@@ -67,7 +59,9 @@ body {
   opacity: 0;
   transition: opacity 0.3s ease;
   animation: fadeIn 0.5s ease-out;
+  box-sizing: border-box; /* Ensure padding doesn't cause overflow */
   overflow-x: hidden; /* Prevent horizontal scrolling */
+  padding-bottom: 5rem;
 }
 
 .screen.active {
@@ -92,8 +86,6 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  word-wrap: break-word; /* Prevent long text overflow */
-  overflow-wrap: break-word;
 }
 
 .title::before {
@@ -112,8 +104,6 @@ h2 {
   font-weight: 500;
   margin-bottom: var(--space-md);
   color: var(--color-primary);
-  word-wrap: break-word;
-  overflow-wrap: break-word;
 }
 
 /* Buttons */
@@ -126,7 +116,6 @@ h2 {
   cursor: pointer;
   box-shadow: 0 2px 5px rgba(0,0,0,0.15);
   transition: transform 0.1s ease, box-shadow 0.3s, background 0.2s;
-  max-width: 100%; /* Prevent buttons from overflowing */
 }
 
 .btn:hover:not(:disabled) {
@@ -172,7 +161,6 @@ h2 {
   display: block;
   margin: var(--space-xl) auto;
   min-width: 200px;
-  max-width: 100%; /* Prevent overflow */
 }
 
 .btn-start:hover:not(:disabled) {
@@ -195,7 +183,6 @@ h2 {
   border: 2px solid var(--color-primary);
   border-radius: var(--radius-md);
   font-size: 1rem;
-  max-width: 100%; /* Prevent input from overflowing */
 }
 
 .player-input input:focus {
@@ -221,7 +208,6 @@ h2 {
   margin: 0 auto;
   max-height: 300px;
   overflow-y: auto;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .player-list li {
@@ -234,7 +220,6 @@ h2 {
   justify-content: space-between;
   align-items: center;
   animation: slideIn 0.4s ease-out;
-  max-width: 100%; /* Prevent overflow */
 }
 
 .player-list .remove-player {
@@ -253,11 +238,9 @@ h2 {
 /* Games Screen */
 .games-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: var(--space-md);
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
   margin-bottom: var(--space-lg);
-  max-width: 100%; /* Prevent grid overflow */
-  overflow-x: hidden; /* Ensure no horizontal scrolling */
 }
 
 .game-card {
@@ -269,7 +252,6 @@ h2 {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   position: relative;
   overflow: hidden;
-  max-width: 100%; /* Prevent overflow */
 }
 
 .game-card:hover {
@@ -290,8 +272,6 @@ h2 {
   font-size: 1.5rem;
   margin-bottom: var(--space-xs);
   color: var(--color-primary);
-  word-wrap: break-word;
-  overflow-wrap: break-word;
 }
 
 .game-card .players-required {
@@ -319,8 +299,6 @@ h2 {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   border-bottom-left-radius: var(--radius-lg);
   border-bottom-right-radius: var(--radius-lg);
-  max-width: 100%; /* Prevent overflow */
-  overflow-x: hidden; /* Ensure no horizontal scrolling */
 }
 
 .game-info {
@@ -330,9 +308,6 @@ h2 {
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   margin: 0 auto var(--space-xl);
   max-width: 800px;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
-  word-wrap: break-word; /* Prevent long text overflow */
-  overflow-wrap: break-word;
 }
 
 .info-section h3 {
@@ -349,8 +324,6 @@ h2 {
   color: var(--color-text-muted);
   font-size: 1.1rem;
   line-height: 1.6;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
 }
 
 /* Category Selection Screen */
@@ -360,14 +333,10 @@ h2 {
   gap: var(--space-md);
   margin: var(--space-xl) auto;
   max-width: 600px;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .category-card {
-  background-color: var(--color-bg-light);
-  border-radius: var(--radius-lg);
-  padding: var(--space-xl);
-  font-size: 1.5rem;
+  juntas: 1.5rem;
   font-weight: 500;
   color: var(--color-primary);
   cursor: pointer;
@@ -375,7 +344,6 @@ h2 {
   transition: transform 0.3s ease, background 0.3s;
   position: relative;
   overflow: hidden;
-  max-width: 100%; /* Prevent overflow */
 }
 
 .category-card:hover {
@@ -407,7 +375,6 @@ h2 {
   margin: var(--space-xl) auto;
   box-shadow: 0 6px 12px rgba(0,0,0,0.2);
   animation: wobble 1s;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .warning-title {
@@ -415,8 +382,6 @@ h2 {
   font-size: 2rem;
   color: var(--color-error);
   margin-bottom: var(--space-lg);
-  word-wrap: break-word;
-  overflow-wrap: break-word;
 }
 
 .warning-title::before {
@@ -430,8 +395,6 @@ h2 {
   line-height: 1.5;
   margin-bottom: var(--space-xl);
   color: #555;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
 }
 
 /* Secret Word Screen */
@@ -445,7 +408,6 @@ h2 {
   margin: var(--space-xl) auto;
   box-shadow: 0 6px 16px rgba(0,0,0,0.3);
   animation: fadeInUp 0.6s ease-out;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .greeting-title {
@@ -457,8 +419,6 @@ h2 {
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
 }
 
 .greeting-title::before {
@@ -470,8 +430,6 @@ h2 {
   font-size: 1.8rem;
   color: var(--color-text-dark);
   margin-bottom: var(--space-xl);
-  word-wrap: break-word;
-  overflow-wrap: break-word;
 }
 
 .secret-content {
@@ -503,7 +461,6 @@ h2 {
   max-width: 800px;
   margin: var(--space-xl) auto;
   animation: fadeInUp 0.6s ease-out;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .questions-instructions {
@@ -511,8 +468,6 @@ h2 {
   color: var(--color-text-dark);
   margin-bottom: var(--space-xl);
   position: relative;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
 }
 
 .questions-instructions::before {
@@ -529,8 +484,6 @@ h2 {
   color: var(--color-primary);
   margin: var(--space-xl) 0;
   min-height: 60px;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
 }
 
 /* Voting Round Screen */
@@ -543,7 +496,6 @@ h2 {
   max-width: 800px;
   margin: var(--space-xl) auto;
   animation: fadeInUp 0.6s ease-out;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .voting-instructions {
@@ -551,16 +503,12 @@ h2 {
   color: var(--color-text-dark);
   margin-bottom: var(--space-xl);
   text-align: center;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
 }
 
 .voting-area {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: var(--space-md);
-  max-width: 100%; /* Prevent overflow */
-  overflow-x: hidden; /* Ensure no horizontal scrolling */
 }
 
 .voting-buttons button {
@@ -577,7 +525,6 @@ h2 {
   padding: 2rem 1rem;
   text-align: center;
   animation: fadeIn 0.5s ease-out;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .results-title {
@@ -585,8 +532,6 @@ h2 {
   margin-bottom: 1rem;
   color: var(--color-text-dark);
   text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
-  word-wrap: break-word;
-  overflow-wrap: break-word;
 }
 
 .results-tables {
@@ -594,7 +539,6 @@ h2 {
   flex-wrap: wrap;
   gap: 2rem;
   justify-content: center;
-  max-width: 100%; /* Prevent overflow */
 }
 
 .results-box {
@@ -603,9 +547,8 @@ h2 {
   box-shadow: 0 4px 15px rgba(0,0,0,0.05);
   padding: 1rem;
   flex: 1 1 400px;
-  overflow-x: auto; /* Allow internal scrolling for tables */
+  overflow-x: auto;
   animation: slideUp 0.6s ease-out;
-  max-width: 100%; /* Prevent overflow */
 }
 
 .box-title {
@@ -614,14 +557,11 @@ h2 {
   color: #444;
   border-bottom: 2px solid #eee;
   padding-bottom: 0.5rem;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
 }
 
 .results-table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed; /* Prevent table from expanding beyond container */
 }
 
 .results-table th,
@@ -630,8 +570,6 @@ h2 {
   font-size: 1rem;
   color: #555;
   text-align: center;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
 }
 
 .results-table th {
@@ -666,14 +604,12 @@ h2 {
   bottom: 0;
   left: 0;
   width: 100%;
-  max-width: 100%; /* Prevent overflow */
   background-color: #000;
   display: flex;
   justify-content: space-around;
   align-items: center;
   box-shadow: 0 -2px 5px rgba(0,0,0,0.3);
   z-index: 1000;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .bottom-nav .nav-btn {
@@ -700,8 +636,6 @@ h2 {
   padding: 1rem;
   border-bottom-left-radius: var(--radius-lg);
   border-bottom-right-radius: var(--radius-lg);
-  max-width: 100%; /* Prevent overflow */
-  overflow-x: hidden; /* Ensure no horizontal scrolling */
 }
 
 #MorningDurationScreen .sub-title,
@@ -710,16 +644,12 @@ h2 {
   margin: 1rem 0;
   font-size: 1.2rem;
   font-weight: 500;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
 }
 
 #MorningDurationScreen .description,
 #NightDurationScreen .description {
   font-size: 0.95rem;
   margin-bottom: 1.5rem;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
 }
 
 #MorningDurationScreen .description p,
@@ -731,7 +661,6 @@ h2 {
 #NightDurationScreen .btn-start-night {
   display: block;
   width: 100%;
-  max-width: 100%; /* Prevent overflow */
   text-align: center;
   background: #222;
   color: var(--color-yellow);
@@ -755,8 +684,6 @@ h2 {
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
   margin-bottom: 2rem;
-  max-width: 100%; /* Prevent overflow */
-  overflow-x: hidden; /* Ensure no horizontal scrolling */
 }
 
 #MorningDurationScreen .stat,
@@ -768,7 +695,6 @@ h2 {
   align-items: center;
   justify-content: space-between;
   font-size: 0.95rem;
-  max-width: 100%; /* Prevent overflow */
 }
 
 #MorningDurationScreen .stat span,
@@ -783,8 +709,6 @@ h2 {
   background: #222;
   color: var(--color-text-light);
   padding: 0.5rem 0;
-  max-width: 100%; /* Prevent overflow */
-  overflow-x: hidden; /* Ensure no horizontal scrolling */
 }
 
 #MorningDurationScreen .footer-nav .nav-item,
@@ -814,18 +738,15 @@ h2 {
   top: 0;
   left: 0;
   width: 100%;
-  max-width: 100%; /* Prevent overflow */
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .countdown-container {
   text-align: center;
-  max-width: 100%; /* Prevent overflow */
 }
 
 .countdown-number {
@@ -833,8 +754,6 @@ h2 {
   font-weight: bold;
   color: var(--color-text-dark);
   animation: pop 0.8s ease-out;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
 }
 
 /* Images Screen */
@@ -843,8 +762,6 @@ h2 {
   grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
   gap: 8px;
   margin-top: 20px;
-  max-width: 100%; /* Prevent overflow */
-  overflow-x: hidden; /* Ensure no horizontal scrolling */
 }
 
 #imagesScreen .image-card {
@@ -853,7 +770,6 @@ h2 {
   overflow: hidden;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   transition: transform 0.2s;
-  max-width: 100%; /* Prevent overflow */
 }
 
 #imagesScreen .image-card:hover {
@@ -863,7 +779,6 @@ h2 {
 #imagesScreen .image-card img {
   display: block;
   width: 100%;
-  max-width: 100%; /* Ensure images don't overflow */
   height: auto;
 }
 
@@ -871,13 +786,6 @@ h2 {
   max-width: 600px;
   margin: 0 auto;
   padding: 0 16px;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
-}
-
-/* Ensure all images are constrained */
-img {
-  max-width: 100%; /* Prevent images from overflowing */
-  height: auto;
 }
 
 .image-card.matched {
@@ -896,8 +804,6 @@ img {
   grid-template-columns: repeat(5, 1fr);
   gap: 10px;
   padding: 20px;
-  max-width: 100%; /* Prevent overflow */
-  overflow-x: hidden; /* Ensure no horizontal scrolling */
 }
 
 .box {
@@ -907,7 +813,6 @@ img {
   border: 2px solid #ccc;
   cursor: pointer;
   transition: 0.2s;
-  max-width: 100%; /* Prevent overflow */
 }
 
 .box.correct {
@@ -920,7 +825,6 @@ img {
   max-width: 500px;
   margin: 2rem auto;
   text-align: center;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .setting-row {
@@ -932,8 +836,6 @@ img {
   margin: 2rem 0;
   text-align: center;
   color: var(--color-text-dark);
-  word-wrap: break-word;
-  overflow-wrap: break-word;
 }
 
 .headsup-timer {
@@ -976,8 +878,6 @@ img {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  max-width: 100%; /* Prevent overflow */
-  overflow-x: hidden; /* Ensure no horizontal scrolling */
 }
 
 #headsUpGameScreen .game-controls {
@@ -995,16 +895,12 @@ img {
   font-size: 2rem;
   text-align: center;
   margin-top: 1rem;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
 }
 
 .word-display {
   font-size: 2.5rem;
   text-align: center;
   margin: 2rem 0;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
 }
 
 /* Slider */
@@ -1013,7 +909,6 @@ img {
   align-items: center;
   gap: 0.5rem;
   margin: 0.5rem 0 1rem;
-  max-width: 100%; /* Prevent overflow */
 }
 
 .slider-wrapper span {
@@ -1029,7 +924,6 @@ img {
   height: 4px;
   background: #eee;
   border-radius: 2px;
-  max-width: 100%; /* Prevent overflow */
 }
 
 .slider-wrapper input[type=range]::-webkit-slider-thumb {
@@ -1046,8 +940,6 @@ img {
   list-style: none;
   padding: 0;
   margin: 1rem 0;
-  max-width: 100%; /* Prevent overflow */
-  overflow-x: hidden; /* Ensure no horizontal scrolling */
 }
 
 .checkbox-list li {
@@ -1056,7 +948,6 @@ img {
   gap: 0.5rem;
   padding: 0.5rem 0;
   border-bottom: 1px solid rgba(0,0,0,0.1);
-  max-width: 100%; /* Prevent overflow */
 }
 
 .checkbox-list input {
@@ -1068,7 +959,6 @@ img {
   max-height: 300px;
   overflow-y: auto;
   padding-right: 0.5rem;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 /* Animations */
@@ -1185,7 +1075,203 @@ img {
     font-size: 0.9rem;
     padding: 0.5rem;
   }
-  .box-grid {
-    grid-template-columns: repeat(4, 1fr); /* Reduce columns on small screens */
+}
+/* ===== Custom Radio Buttons Styling ===== */
+.vote-form label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-md);
+  margin-bottom: var(--space-xs);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.vote-form label:hover {
+  background: var(--color-primary-light, rgba(138, 43, 226, 0.1));
+}
+
+.vote-form input[type="radio"] {
+  /* اخفاء الراديو الأصلي */
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  width: 1.2rem;
+  height: 1.2rem;
+  border: 2px solid var(--color-primary);
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.vote-form input[type="radio"]::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.6rem;
+  height: 0.6rem;
+  background: var(--color-primary);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.2s ease-in-out;
+}
+
+.vote-form input[type="radio"]:checked {
+  border-color: var(--color-primary-dark, var(--color-purple-dark));
+}
+
+.vote-form input[type="radio"]:checked::after {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.vote-form input[type="radio"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.3);
+}
+/* ===== Challenge Screen Styling ===== */
+#fastChallengeScreen .challenge-box {
+  text-align: center;
+  margin: var(--space-xl) 0;
+}
+
+.btn-challenge {
+  background-color: #000;
+  color: #fff;
+  border: 2px solid #fff;
+  padding: var(--space-md) var(--space-lg);
+  font-size: 1.5rem;
+  border-radius: var(--radius-md);
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.btn-challenge:hover {
+  opacity: 0.8;
+  transform: translateY(-2px);
+}
+
+.countdown-text {
+  font-size: 3rem;
+  color: var(--color-primary);
+  margin-top: var(--space-md);
+  animation: pop 0.5s ease-out;
+}
+
+.challenge-text {
+  font-size: 1.25rem;
+  color: var(--color-text-dark);
+  margin-top: var(--space-md);
+  line-height: 1.4;
+}
+
+/* أزرار ما بعد الكشف */
+#fastChallengeScreen .buttons-row {
+  justify-content: center;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+}
+
+/* ===== Results Screen Styling ===== */
+#fastResultsScreen .results-container {
+  text-align: center;
+}
+
+#fastResultsScreen .results-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-md) 0;
+}
+
+#fastResultsScreen .results-table th,
+#fastResultsScreen .results-table td {
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid #ddd;
+  font-size: 1rem;
+}
+
+#fastResultsScreen .results-table th {
+  background: var(--color-bg-light);
+  color: var(--color-primary);
+}
+
+#fastResultsScreen .buttons-row {
+  justify-content: center;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+}
+/* خلفية ناعمة مع تأثير بسيط */
+.results-screen {
+  min-height: 100vh;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  font-family: 'Cairo', sans-serif;
+}
+
+.results-title {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #d32f2f;
+  margin-bottom: 30px;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+}
+
+.results-box {
+  background-color: #ffffff;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+  animation: fadeInUp 0.7s ease-in-out;
+}
+
+.results-area {
+  text-align: right;
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 30px;
+  direction: rtl;
+}
+
+.results-area h3 {
+  margin-bottom: 10px;
+}
+
+.results-area p {
+  margin: 5px 0;
+}
+
+.back-btn {
+  font-size: 1.1rem;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+
+/* أنيميشن خفيفة */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.score-row{
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+  border-bottom: #eee solid 1px;
 }
