@@ -3,17 +3,17 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   const players = loadPlayers();
-  // default round time in seconds (configurable via slider)
-  let roundTime = 120;
+  let roundTime = 10;     // default seconds
   let currentIdx = 0;
   let countdownId = null;
 
-  // raw movement accumulator
+  // count of shakes
   let movementScore = 0;
-  const ACCEL_THRESHOLD = 1.2; // tweak for sensitivity
+  const ACCEL_THRESHOLD = 1.2; // tune as needed
+  let lastShakeTime = 0;
+  const SHAKE_DEBOUNCE = 300; // ms
 
-  // per-player results
-  // { name, movement, roundPoints, totalPoints }
+  // per-player records
   const results = players.map(name => ({
     name,
     movement: 0,
@@ -42,14 +42,14 @@ document.addEventListener('DOMContentLoaded', () => {
   backRulesBtn.onclick  = () => showScreen('balanceRulesScreen');
   startBtn.onclick      = () => showScreen('balanceSettingsScreen');
 
-  // slider updates roundTime & label
+  // slider controlling roundTime
   slider.addEventListener('input', e => {
     roundTime = +e.target.value;
     const min = Math.floor(roundTime/60);
     timeValue.textContent = `${min} دقيقة${min>1?'ن':''}`;
   });
 
-  // after settings → reset & first pass
+  // after settings → first pass
   launchBtn.onclick = () => {
     currentIdx = 0;
     results.forEach(r => { r.movement = 0; r.roundPoints = 0; });
@@ -61,30 +61,29 @@ document.addEventListener('DOMContentLoaded', () => {
       return showFinalResults();
     }
     const name = players[currentIdx];
-    passText.textContent    = `📱 الدور على: ${name}`;
-    playerDOM.textContent   = name;
+    passText.textContent  = `📱 الدور على: ${name}`;
+    playerDOM.textContent = name;
     showScreen('balancePassScreen');
   }
 
   passNextBtn.onclick = () => startRound();
 
   function startRound() {
-    // prepare UI
     showScreen('balanceGameScreen');
-    timerDOM.textContent     = formatTime(roundTime);
-    movementScore            = 0;
+    timerDOM.textContent        = formatTime(roundTime);
+    movementScore               = 0;
     movementDisplay.textContent = '0';
+    lastShakeTime               = 0;
 
-    // begin listening to motion
+    // watch device motion
     window.addEventListener('devicemotion', onDeviceMotion);
 
-    // countdown
     let remaining = roundTime;
     clearInterval(countdownId);
     countdownId = setInterval(() => {
       remaining--;
-      timerDOM.textContent = formatTime(remaining);
-      movementDisplay.textContent = Math.floor(movementScore);
+      timerDOM.textContent        = formatTime(remaining);
+      movementDisplay.textContent = movementScore;
       if (remaining <= 0) {
         clearInterval(countdownId);
         endRound();
@@ -95,23 +94,24 @@ document.addEventListener('DOMContentLoaded', () => {
   function onDeviceMotion(e) {
     const acc = e.accelerationIncludingGravity || { x:0,y:0,z:0 };
     const mag = Math.hypot(acc.x, acc.y, acc.z);
-    if (mag > ACCEL_THRESHOLD) {
-      movementScore += (mag - ACCEL_THRESHOLD);
+    const now = Date.now();
+    // if above threshold and debounce time passed → count one shake
+    if (mag > ACCEL_THRESHOLD && now - lastShakeTime > SHAKE_DEBOUNCE) {
+      movementScore++;
+      lastShakeTime = now;
     }
   }
 
   function endRound() {
     clearInterval(countdownId);
     window.removeEventListener('devicemotion', onDeviceMotion);
-
-    // record this player’s movement
-    results[currentIdx].movement = Math.floor(movementScore);
+    results[currentIdx].movement = movementScore;
     currentIdx++;
     nextPass();
   }
 
   function showFinalResults() {
-    // sort by ascending movement (steadier = fewer shakes)
+    // sort by fewest shakes
     const sorted = [...results].sort((a,b) => a.movement - b.movement);
 
     // award points
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (sorted[1]) sorted[1].roundPoints = 10;
     if (sorted[2]) sorted[2].roundPoints = 5;
 
-    // update totals & persistent storage
+    // update totals & storage
     sorted.forEach(r => {
       r.totalPoints += r.roundPoints;
       localStorage.setItem(r.name, r.totalPoints);
@@ -140,7 +140,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function formatTime(sec) {
-    const m = Math.floor(sec/60), s = sec%60;
+    const m = Math.floor(sec/60),
+          s = sec % 60;
     return `${m}:${s.toString().padStart(2,'0')}`;
   }
 
