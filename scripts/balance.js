@@ -1,20 +1,18 @@
-// scripts/balance.js
 // Dependencies: loadPlayers(), showScreen(id)
-
 document.addEventListener('DOMContentLoaded', () => {
-  const players = loadPlayers();
-  let roundTime = 10;     // default seconds
-  let currentIdx = 0;
-  let countdownId = null;
+  const playersBalance = loadPlayers();
+  let roundTimeBalance = 10;     // seconds
+  let currentIdxBalance = 0;
+  let countdownIdBalance = null;
 
   // count of shakes
   let movementScore = 0;
-  const ACCEL_THRESHOLD = 1.2; // tune as needed
+  const ACCEL_THRESHOLD = 0.7;    // lower threshold for extra sensitivity
   let lastShakeTime = 0;
-  const SHAKE_DEBOUNCE = 300; // ms
+  const SHAKE_DEBOUNCE = 200;     // shorter debounce
 
-  // per-player records
-  const results = players.map(name => ({
+  // per-player results
+  const results = playersBalance.map(name => ({
     name,
     movement: 0,
     roundPoints: 0,
@@ -22,70 +20,69 @@ document.addEventListener('DOMContentLoaded', () => {
   }));
 
   // DOM refs
-  const slider          = document.getElementById('balanceTimeSlider');
-  const timeValue       = document.getElementById('balanceTimeValue');
-  const backRulesBtn    = document.getElementById('backToRulesBtnBalance');
-  const startBtn        = document.getElementById('startBalanceBtn');
-  const launchBtn       = document.getElementById('startBalanceSettingsBtn');
-  const passText        = document.getElementById('balancePassText');
-  const passNextBtn     = document.getElementById('balancePassNextBtn');
-  const timerDOM        = document.getElementById('balanceTimer');
-  const playerDOM       = document.getElementById('balanceCurrentPlayer');
-  const movementDisplay = document.getElementById('balanceMovementDisplay');
-  const resultsBody     = document.getElementById('balanceResultsBody');
-  const replayBtn       = document.getElementById('balanceReplayBtn');
-  const backGamesBtn    = document.getElementById('balanceBackBtn');
+  const sliderBalance          = document.getElementById('balanceTimeSlider');
+  const timeValueBalance       = document.getElementById('balanceTimeValue');
+  const backRulesBtnBalance    = document.getElementById('backToRulesBtnBalance');
+  const startBtnBalance        = document.getElementById('startBalanceBtn');
+  const launchBtnBalance       = document.getElementById('startBalanceSettingsBtn');
+  const passTextBalance        = document.getElementById('balancePassText');
+  const passNextBtnBalance     = document.getElementById('balancePassNextBtn');
+  const timerDOMBalance        = document.getElementById('balanceTimer');
+  const playerDOMBalance       = document.getElementById('balanceCurrentPlayer');
+  const movementDisplayBalance = document.getElementById('balanceMovementDisplay');
+  const resultsBodyBalance     = document.getElementById('balanceResultsBody');
+  const replayBtnBalance       = document.getElementById('balanceReplayBtn');
+  const backGamesBtnBalance    = document.getElementById('balanceBackBtn');
 
   // navigation
   document.getElementById('backToGamesBtnBalance')
           .onclick = () => showScreen('gamesScreen');
-  backRulesBtn.onclick  = () => showScreen('balanceRulesScreen');
-  startBtn.onclick      = () => showScreen('balanceSettingsScreen');
+  backRulesBtnBalance.onclick  = () => showScreen('balanceRulesScreen');
+  startBtnBalance.onclick      = () => showScreen('balanceSettingsScreen');
 
-  // slider controlling roundTime
-  slider.addEventListener('input', e => {
-    roundTime = +e.target.value;
-    const min = Math.floor(roundTime/60);
-    timeValue.textContent = `${min} دقيقة${min>1?'ن':''}`;
+  // sliderBalance controlling roundTimeBalance
+  sliderBalance.addEventListener('input', e => {
+    roundTimeBalance = +e.target.value;
+    timeValueBalance.textContent = `${roundTimeBalance} ثانية`;
   });
 
   // after settings → first pass
-  launchBtn.onclick = () => {
-    currentIdx = 0;
+  launchBtnBalance.onclick = () => {
+    currentIdxBalance = 0;
     results.forEach(r => { r.movement = 0; r.roundPoints = 0; });
     nextPass();
   };
 
   function nextPass() {
-    if (currentIdx >= players.length) {
+    if (currentIdxBalance >= playersBalance.length) {
       return showFinalResults();
     }
-    const name = players[currentIdx];
-    passText.textContent  = `📱 الدور على: ${name}`;
-    playerDOM.textContent = name;
+    const name = playersBalance[currentIdxBalance];
+    passTextBalance.textContent  = `📱 الدور على: ${name}`;
+    playerDOMBalance.textContent = name;
     showScreen('balancePassScreen');
   }
 
-  passNextBtn.onclick = () => startRound();
+  passNextBtnBalance.onclick = () => startRound();
 
   function startRound() {
     showScreen('balanceGameScreen');
-    timerDOM.textContent        = formatTime(roundTime);
+    timerDOMBalance.textContent        = formatTime(roundTimeBalance);
     movementScore               = 0;
-    movementDisplay.textContent = '0';
+    movementDisplayBalance.textContent = '0';
     lastShakeTime               = 0;
 
-    // watch device motion
+    // listen for motion
     window.addEventListener('devicemotion', onDeviceMotion);
 
-    let remaining = roundTime;
-    clearInterval(countdownId);
-    countdownId = setInterval(() => {
+    let remaining = roundTimeBalance;
+    clearInterval(countdownIdBalance);
+    countdownIdBalance = setInterval(() => {
       remaining--;
-      timerDOM.textContent        = formatTime(remaining);
-      movementDisplay.textContent = movementScore;
+      timerDOMBalance.textContent        = formatTime(remaining);
+      movementDisplayBalance.textContent = movementScore;
       if (remaining <= 0) {
-        clearInterval(countdownId);
+        clearInterval(countdownIdBalance);
         endRound();
       }
     }, 1000);
@@ -95,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const acc = e.accelerationIncludingGravity || { x:0,y:0,z:0 };
     const mag = Math.hypot(acc.x, acc.y, acc.z);
     const now = Date.now();
-    // if above threshold and debounce time passed → count one shake
     if (mag > ACCEL_THRESHOLD && now - lastShakeTime > SHAKE_DEBOUNCE) {
       movementScore++;
       lastShakeTime = now;
@@ -103,30 +99,23 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function endRound() {
-    clearInterval(countdownId);
+    clearInterval(countdownIdBalance);
     window.removeEventListener('devicemotion', onDeviceMotion);
-    results[currentIdx].movement = movementScore;
-    currentIdx++;
+    results[currentIdxBalance].movement = movementScore;
+    currentIdxBalance++;
     nextPass();
   }
 
   function showFinalResults() {
-    // sort by fewest shakes
     const sorted = [...results].sort((a,b) => a.movement - b.movement);
-
-    // award points
     if (sorted[0]) sorted[0].roundPoints = 20;
     if (sorted[1]) sorted[1].roundPoints = 10;
     if (sorted[2]) sorted[2].roundPoints = 5;
-
-    // update totals & storage
     sorted.forEach(r => {
       r.totalPoints += r.roundPoints;
       localStorage.setItem(r.name, r.totalPoints);
     });
-
-    // render table
-    resultsBody.innerHTML = sorted.map((r,i) => `
+    resultsBodyBalance.innerHTML = sorted.map((r,i) => `
       <tr>
         <td>${i+1}</td>
         <td>${r.name}</td>
@@ -135,16 +124,14 @@ document.addEventListener('DOMContentLoaded', () => {
         <td>${r.totalPoints}</td>
       </tr>
     `).join('');
-
     showScreen('balanceResultsScreen');
   }
 
   function formatTime(sec) {
-    const m = Math.floor(sec/60),
-          s = sec % 60;
+    const m = Math.floor(sec/60), s = sec % 60;
     return `${m}:${s.toString().padStart(2,'0')}`;
   }
 
-  replayBtn.onclick    = () => showScreen('balanceRulesScreen');
-  backGamesBtn.onclick = () => showScreen('gamesScreen');
+  replayBtnBalance.onclick    = () => showScreen('balanceRulesScreen');
+  backGamesBtnBalance.onclick = () => showScreen('gamesScreen');
 });
