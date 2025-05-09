@@ -1527,3 +1527,20 @@ h2 {
   border-radius: 0.5em;
   display: inline-block;
 }
+/* make the shake counter big, centered, and contrasting */
+#balanceMovementDisplay {
+  font-size: 4rem;
+  font-weight: bold;
+  color: #e91e63;
+  text-align: center;
+  margin: 1em 0;
+}
+
+/* ensure the timer is also prominent */
+#balanceTimer {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #2196f3;
+  text-align: center;
+  margin-bottom: 1em;
+}
