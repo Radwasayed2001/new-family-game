@@ -14,6 +14,10 @@
       rel="stylesheet">
   </head>
   <body>
+    <div class="alert-container" id="alertContainer">
+      <!-- Alerts will be injected here -->
+    </div>
+    
     <section id="playerScreen" class="screen active">
       <div class="container">
         <h1 class="title">ألعاب العائلة</h1>
@@ -32,6 +36,203 @@
         <button id="startButton" class="btn btn-start" disabled>ابدأ</button>
       </div>
     </section>
+    <!-- قواعد لعبة التوازن -->
+<section id="balanceRulesScreen" class="screen">
+  <header class="game-header">
+    <div class="container">
+      <h1 class="game-header-title">⚖️ لعبة: التوازن</h1>
+    </div>
+  </header>
+  <div class="container">
+    <div class="game-info">
+      <h2 class="game-title">📜 قوانين اللعبة</h2>
+      <p>عدد اللاعبين: من 3 إلى 12 لاعب.</p>
+      <p>لعبة حركية تتطلب ثباتاً وتركيزاً! 🏃‍♂️</p>
+      <ol>
+        <li>اتفقوا على حركة توازن (وقوف على رجل واحدة، أو أطراف الأصابع…).</li>
+        <li>عند دورك، أمسك الهاتف بثبات وحافظ على الوضع المتفق عليه.</li>
+        <li>أقل لاعب يتحرك خلال الوقت المحدد هو الفائز! 🏆</li>
+      </ol>
+    </div>
+    <div class="buttons-row">
+      <button id="backToGamesBtnBalance" class="btn btn-secondary">🔙 العودة للقائمة</button>
+      <button id="startBalanceBtn"       class="btn btn-primary">ابدأ ▶️</button>
+    </div>
+  </div>
+</section>
+
+<!-- إعدادات التوازن -->
+<section id="balanceSettingsScreen" class="screen">
+  <header class="game-header">
+    <div class="container">
+      <h1 class="game-header-title">⚙️ إعدادات التوازن</h1>
+    </div>
+  </header>
+  <div class="container">
+    <div class="info-section">
+      <h3>⏲️ زمن الجولة:</h3>
+      <div class="slider-wrapper">
+        <span>2:00</span>
+        <input id="balanceTimeSlider" type="range" min="120" max="240" step="30" value="120">
+        <span id="balanceTimeValue">2 دقائق</span>
+      </div>
+      <small>اختر من دقيقتين إلى أربع دقائق</small>
+    </div>
+    <div class="buttons-row">
+      <button id="backToRulesBtnBalance" class="btn btn-secondary">🔙 الرجوع</button>
+      <button id="startBalanceSettingsBtn" class="btn btn-primary">ابدأ ▶️</button>
+    </div>
+  </div>
+</section>
+
+<!-- تمرير الهاتف -->
+<section id="balancePassScreen" class="screen">
+  <div class="container">
+    <div id="balancePassText" class="player-name-display"></div>
+    <button id="balancePassNextBtn" class="btn btn-black">
+      الدور على <span id="balanceCurrentPlayer"></span><br>
+      لأخفاء الهاتف… ثم اضغط لبدء الوقت
+    </button>
+  </div>
+</section>
+
+<!-- شاشة اللعب -->
+<section id="balanceGameScreen" class="screen">
+  <div class="container">
+    <div id="balanceTimer" class="timer-display"></div>
+    <div class="game-controls">
+      <button id="balanceStillBtn" class="btn btn-success">✔️ لم أتحرك</button>
+      <button id="balanceMoveBtn"  class="btn btn-danger">❌ تحركت</button>
+    </div>
+  </div>
+</section>
+
+<!-- اختيار الفائز -->
+<section id="balanceSelectWinnerScreen" class="screen">
+  <div class="container results-container">
+    <h1 class="results-title">من هو الأكثر ثباتاً؟</h1>
+    <ul id="balancePlayersList" class="results-list"></ul>
+  </div>
+</section>
+
+<!-- النتائج النهائية -->
+<section id="balanceResultsScreen" class="screen">
+  <header class="game-header">
+    <div class="container">
+      <h1 class="game-header-title">🏆 نتائج التوازن</h1>
+    </div>
+  </header>
+  <div class="container">
+    <table class="results-table">
+      <thead>
+        <tr><th>#</th><th>اللاعب</th><th>مرات الفوز</th><th>نقاط الجولة</th><th>النقاط الكلية</th></tr>
+      </thead>
+      <tbody id="balanceResultsBody"></tbody>
+    </table>
+    <div class="results-actions">
+      <button id="balanceReplayBtn" class="btn btn-primary">🔄 إعادة اللعبة</button>
+      <button id="balanceBackBtn"   class="btn btn-secondary">🏠 العودة للقائمة</button>
+    </div>
+  </div>
+</section>
+
+    <section id="treasureRulesScreen" class="screen rules-screen">
+      <header class="game-header">
+        <div class="container">
+          <h1>📜 قوانين لعبة الكنز</h1>
+        </div>
+      </header>
+    
+      <div class="container">
+        <div class="rules-box">
+          <p class="rule-text">
+            🎮 <strong>عدد اللاعبين:</strong> اللعبة مناسبة من <strong>3 إلى 12 لاعب</strong>.
+          </p>
+    
+          <p class="rule-text">
+            🪙 <strong>فكرة اللعبة:</strong> كل مرة بيتم اختيار لاعب لإخفاء الهاتف 🤫 في مكان ما،
+            وباقي اللاعبين بيبدأوا رحلة البحث عنه 🔍.
+          </p>
+    
+          <p class="rule-text highlight">
+            🚨 السرعة والتركيز هما مفتاح الفوز! اللاعب اللي يلاقي الهاتف أسرع هو الكسبان 🏆.
+          </p>
+    
+          <div class="buttons">
+            <button id="nextButton" onclick="showScreen('gameSettingsScreen')" class="btn btn-primary">التالي</button>
+            <button id="backToMenuButtonT" class="btn btn-secondary">الرجوع</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="gameSettingsScreen" class="screen settings-screen">
+      <div class="container">
+        <h2>⚙️ إعدادات الجولة</h2>
+    
+        <label for="roundDuration" class="label">⏱ اختر وقت الجولة:</label>
+        <select id="roundDuration" class="duration-select">
+          <option value="2">2 دقائق</option>
+          <option value="3">3 دقائق</option>
+          <option value="4">4 دقائق</option>
+        </select>
+    
+        <button id="startGameButtonT" class="btn btn-primary">ابدأ</button>
+      </div>
+    </section>
+    <section id="hidePhoneScreen" class="screen hide-screen">
+      <div class="container">
+        <button id="startRoundButton" class="start-button">
+          الدور على <span id="hiderName">محمد</span> لإخفاء الهاتف 🔐<br>
+          بعد الإخفاء اضغط على هذا الزر لبدء الوقت وأخبر باقي اللاعبين
+        </button>
+      </div>
+    </section>
+    <section id="roundRunningScreen" class="screen round-screen">
+      <div class="container">
+        <h2>⏱ الجولة بدأت!</h2>
+        <p>الوقت المتبقي: <span id="timeLeft">3:00</span></p>
+    
+        <div class="action-buttons">
+          <button id="phoneFoundButton" class="btn btn-success">✅ تم العثور على الهاتف</button>
+          <button id="giveUpButton" class="btn btn-danger">❌ لم يتم العثور</button>
+        </div>
+      </div>
+    </section>
+    <section id="selectWinnerScreen" class="screen winner-screen">
+      <div class="container">
+        <h2>🎉 من وجد الهاتف؟</h2>
+    
+        <ul id="playersList" class="player-list">
+        </ul>
+      </div>
+    </section>
+    <section id="resultsScreenT" class="screen results-screen">
+      <div class="container">
+        <h2>📊 النتائج</h2>
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>المركز</th>
+              <th>اللاعب</th>
+              <th>مرات الفوز</th>
+              <th>نقاط الجولة</th>
+              <th>النقاط الكلية</th>
+            </tr>
+          </thead>
+          <tbody id="resultsBody">
+            <tr>
+              <td>🥇 1</td>
+              <td>سارة</td>
+              <td>3</td>
+              <td>10</td>
+              <td>30</td>
+            </tr>
+            <!-- باقي النتائج تتملأ ديناميكيًا -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+                
     <!-- ====== شاشة قوانين لعبة "الأسرع" ====== -->
 <section id="fastRulesScreen" class="screen">
   <header class="game-header">
@@ -221,10 +422,6 @@
       <h2 class="game-title">اختر نوع الأسئلة</h2>
       <div class="info-section">
         <form id="categoriesForm" class="checkbox-list scrollable">
-          <label>
-            <input type="checkbox" name="category" value="general" checked>
-            🐶 <span>أسئلة عامة</span>
-          </label><br>
           <label>
             <input type="checkbox" name="category" value="guess">
             🔮 <span>أسئلة توقع</span>
@@ -1264,5 +1461,7 @@
     <script src="scripts/jawwal.js"></script>
     <script src="scripts/who.js"></script>
     <script src="scripts/fastest.js"></script>
+    <script src="scripts/kanz.js"></script>
+    <script src="scripts/balance.js"></script>
   </body>
 </html>

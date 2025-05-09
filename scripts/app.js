@@ -63,6 +63,8 @@ function setupEventListeners() {
       else if (card.dataset.gameId === 'boxes') showScreen('boxesRulesScreen');
       else if (card.dataset.gameId === 'whoAmongUs') showScreen('whoRulesScreen');
       else if (card.dataset.gameId === 'fastest') showScreen('fastRulesScreen');
+      else if (card.dataset.gameId === 'treasure') showScreen('treasureRulesScreen');
+      else if (card.dataset.gameId === 'balance') showScreen('balanceRulesScreen');
     }
   });
   submitGuessButton.addEventListener('click', calculateResults);
@@ -102,7 +104,7 @@ function addPlayer() {
   const name = playerNameInput.value.trim();
   const { isValid, error } = validatePlayerName(name, players);
   if (!isValid) {
-    alert(error);
+    showAlert('error',error);
     return;
   }
   players.push(name);
