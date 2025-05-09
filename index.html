@@ -72,11 +72,18 @@
     <div class="info-section">
       <h3>⏲️ زمن الجولة:</h3>
       <div class="slider-wrapper">
-        <span>2:00</span>
-        <input id="balanceTimeSlider" type="range" min="120" max="240" step="30" value="120">
-        <span id="balanceTimeValue">2 دقائق</span>
+        <span>10s</span>
+        <input
+          id="balanceTimeSlider"
+          type="range"
+          min="10"
+          max="60"
+          step="1"
+          value="10"
+        >
+        <span id="balanceTimeValue">10 ثانية</span>
       </div>
-      <small>اختر من دقيقتين إلى أربع دقائق</small>
+      <small>اختر من 10 إلى 60 ثانية</small>
     </div>
     <div class="buttons-row">
       <button id="backToRulesBtnBalance" class="btn btn-secondary">🔙 الرجوع</button>
@@ -84,6 +91,7 @@
     </div>
   </div>
 </section>
+
 
 <!-- تمرير الهاتف -->
 <section id="balancePassScreen" class="screen">
