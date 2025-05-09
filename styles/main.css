@@ -1516,3 +1516,14 @@ h2 {
 }
 
 /* reuse your .screen, .container, .buttons-row, .game-header, etc. */
+.movement-display {
+  margin: 1em 0;
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 0 0 5px rgba(0,0,0,0.8);
+  background: rgba(0,0,0,0.3);
+  padding: 0.5em 1em;
+  border-radius: 0.5em;
+  display: inline-block;
+}

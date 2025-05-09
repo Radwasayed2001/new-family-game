@@ -2,143 +2,146 @@
 // Dependencies: loadPlayers(), showScreen(id)
 
 document.addEventListener('DOMContentLoaded', () => {
-  const playersBalance    = loadPlayers();
-  let roundTimeBalance    = 120; // seconds
-  let currentIndexBalance = 0;
-  let timerIdBalance      = null;
-  let secondsLeftBalance  = 0;
-  let movementSum         = 0;   // accumulate movement magnitude
+  const players = loadPlayers();
+  // default round time in seconds (configurable via slider)
+  let roundTime = 120;
+  let currentIdx = 0;
+  let countdownId = null;
 
-  // Will hold per-player results:
-  // { name, movementScore, roundPoints, totalPoints }
-  const resultsBalance = playersBalance.map(name => ({
+  // raw movement accumulator
+  let movementScore = 0;
+  const ACCEL_THRESHOLD = 1.2; // tweak for sensitivity
+
+  // per-player results
+  // { name, movement, roundPoints, totalPoints }
+  const results = players.map(name => ({
     name,
-    movementScore: 0,
+    movement: 0,
     roundPoints: 0,
     totalPoints: parseInt(localStorage.getItem(name)) || 0
   }));
 
   // DOM refs
-  const timeSlider     = document.getElementById('balanceTimeSlider');
-  const timeValue      = document.getElementById('balanceTimeValue');
-  const backRulesBtn   = document.getElementById('backToRulesBtnBalance');
-  const startBtn       = document.getElementById('startBalanceBtn');
-  const startSetBtn    = document.getElementById('startBalanceSettingsBtn');
-  const passText       = document.getElementById('balancePassText');
-  const passNextBtn    = document.getElementById('balancePassNextBtn');
-  const currPlayerSpan = document.getElementById('balanceCurrentPlayer');
-  const timerDisplay   = document.getElementById('balanceTimer');
-  const resultsBody    = document.getElementById('balanceResultsBody');
-  const replayBtn      = document.getElementById('balanceReplayBtn');
-  const backGamesBtn   = document.getElementById('balanceBackBtn');
+  const slider          = document.getElementById('balanceTimeSlider');
+  const timeValue       = document.getElementById('balanceTimeValue');
+  const backRulesBtn    = document.getElementById('backToRulesBtnBalance');
+  const startBtn        = document.getElementById('startBalanceBtn');
+  const launchBtn       = document.getElementById('startBalanceSettingsBtn');
+  const passText        = document.getElementById('balancePassText');
+  const passNextBtn     = document.getElementById('balancePassNextBtn');
+  const timerDOM        = document.getElementById('balanceTimer');
+  const playerDOM       = document.getElementById('balanceCurrentPlayer');
+  const movementDisplay = document.getElementById('balanceMovementDisplay');
+  const resultsBody     = document.getElementById('balanceResultsBody');
+  const replayBtn       = document.getElementById('balanceReplayBtn');
+  const backGamesBtn    = document.getElementById('balanceBackBtn');
 
-  // Navigation
+  // navigation
   document.getElementById('backToGamesBtnBalance')
-    .onclick = () => showScreen('gamesScreen');
-  backRulesBtn.onclick   = () => showScreen('balanceRulesScreen');
-  startBtn.onclick       = () => showScreen('balanceSettingsScreen');
+          .onclick = () => showScreen('gamesScreen');
+  backRulesBtn.onclick  = () => showScreen('balanceRulesScreen');
+  startBtn.onclick      = () => showScreen('balanceSettingsScreen');
 
-  // Slider
-  timeSlider.addEventListener('input', e => {
-    roundTimeBalance = +e.target.value;
-    const minutes = Math.floor(roundTimeBalance/60);
-    timeValue.textContent = `${minutes} دقيقة${minutes > 1 ? 'ات' : ''}`;
+  // slider updates roundTime & label
+  slider.addEventListener('input', e => {
+    roundTime = +e.target.value;
+    const min = Math.floor(roundTime/60);
+    timeValue.textContent = `${min} دقيقة${min>1?'ن':''}`;
   });
 
-  // After settings → first turn
-  startSetBtn.onclick = () => {
-    secondsLeftBalance = roundTimeBalance;
-    currentIndexBalance = 0;
+  // after settings → reset & first pass
+  launchBtn.onclick = () => {
+    currentIdx = 0;
+    results.forEach(r => { r.movement = 0; r.roundPoints = 0; });
     nextPass();
   };
 
   function nextPass() {
-    if (currentIndexBalance >= playersBalance.length) {
+    if (currentIdx >= players.length) {
       return showFinalResults();
     }
-    const player = playersBalance[currentIndexBalance];
-    passText.textContent = `📱 الدور على: ${player}`;
-    currPlayerSpan.textContent = player;
+    const name = players[currentIdx];
+    passText.textContent    = `📱 الدور على: ${name}`;
+    playerDOM.textContent   = name;
     showScreen('balancePassScreen');
   }
 
-  passNextBtn.onclick = () => {
-    showGameScreen();
-    startMeasurement();
-  };
+  passNextBtn.onclick = () => startRound();
 
-  function showGameScreen() {
-    timerDisplay.textContent = formatTime(roundTimeBalance);
+  function startRound() {
+    // prepare UI
     showScreen('balanceGameScreen');
-  }
+    timerDOM.textContent     = formatTime(roundTime);
+    movementScore            = 0;
+    movementDisplay.textContent = '0';
 
-  function startMeasurement() {
-    clearInterval(timerIdBalance);
-    secondsLeftBalance = roundTimeBalance;
-    movementSum = 0;
-    // Listen to device motion
-    window.addEventListener('devicemotion', onMotion);
-    timerDisplay.textContent = formatTime(secondsLeftBalance);
+    // begin listening to motion
+    window.addEventListener('devicemotion', onDeviceMotion);
 
-    timerIdBalance = setInterval(() => {
-      secondsLeftBalance--;
-      timerDisplay.textContent = formatTime(secondsLeftBalance);
-      if (secondsLeftBalance <= 0) {
-        clearInterval(timerIdBalance);
-        window.removeEventListener('devicemotion', onMotion);
-        recordMovement();
+    // countdown
+    let remaining = roundTime;
+    clearInterval(countdownId);
+    countdownId = setInterval(() => {
+      remaining--;
+      timerDOM.textContent = formatTime(remaining);
+      movementDisplay.textContent = Math.floor(movementScore);
+      if (remaining <= 0) {
+        clearInterval(countdownId);
+        endRound();
       }
     }, 1000);
   }
 
-  function onMotion(e) {
-    const a = e.accelerationIncludingGravity;
-    // magnitude of acceleration vector
-    const mag = Math.sqrt((a.x||0)**2 + (a.y||0)**2 + (a.z||0)**2);
-    movementSum += mag;
+  function onDeviceMotion(e) {
+    const acc = e.accelerationIncludingGravity || { x:0,y:0,z:0 };
+    const mag = Math.hypot(acc.x, acc.y, acc.z);
+    if (mag > ACCEL_THRESHOLD) {
+      movementScore += (mag - ACCEL_THRESHOLD);
+    }
   }
 
-  function recordMovement() {
-    // store this player’s movementScore
-    resultsBalance[currentIndexBalance].movementScore = movementSum;
-    currentIndexBalance++;
+  function endRound() {
+    clearInterval(countdownId);
+    window.removeEventListener('devicemotion', onDeviceMotion);
+
+    // record this player’s movement
+    results[currentIdx].movement = Math.floor(movementScore);
+    currentIdx++;
     nextPass();
   }
 
-  function formatTime(sec) {
-    const m = Math.floor(sec/60);
-    const s = sec % 60;
-    return `${m}:${s.toString().padStart(2,'0')}`;
-  }
-
   function showFinalResults() {
-    // rank by movementScore ascending (least moved first)
-    const sorted = [...resultsBalance].sort((a,b) =>
-      a.movementScore - b.movementScore
-    );
+    // sort by ascending movement (steadier = fewer shakes)
+    const sorted = [...results].sort((a,b) => a.movement - b.movement);
 
-    // assign roundPoints: 1st→20, 2nd→10, 3rd→5
-    sorted.forEach((r,i) => {
-      if (i === 0) r.roundPoints = 20;
-      else if (i === 1) r.roundPoints = 10;
-      else if (i === 2) r.roundPoints = 5;
-      else r.roundPoints = 0;
-      // update total
+    // award points
+    if (sorted[0]) sorted[0].roundPoints = 20;
+    if (sorted[1]) sorted[1].roundPoints = 10;
+    if (sorted[2]) sorted[2].roundPoints = 5;
+
+    // update totals & persistent storage
+    sorted.forEach(r => {
       r.totalPoints += r.roundPoints;
       localStorage.setItem(r.name, r.totalPoints);
     });
 
-    // build table
+    // render table
     resultsBody.innerHTML = sorted.map((r,i) => `
       <tr>
         <td>${i+1}</td>
         <td>${r.name}</td>
+        <td>${r.movement}</td>
         <td>${r.roundPoints}</td>
         <td>${r.totalPoints}</td>
       </tr>
     `).join('');
 
     showScreen('balanceResultsScreen');
+  }
+
+  function formatTime(sec) {
+    const m = Math.floor(sec/60), s = sec%60;
+    return `${m}:${s.toString().padStart(2,'0')}`;
   }
 
   replayBtn.onclick    = () => showScreen('balanceRulesScreen');

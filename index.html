@@ -97,15 +97,22 @@
 </section>
 
 <!-- شاشة اللعب -->
+
+<!-- ... inside your balanceGameScreen section ... -->
 <section id="balanceGameScreen" class="screen">
   <div class="container">
-    <div id="balanceTimer" class="timer-display"></div>
+    <h2>⏱️ الوقت المتبقي: <span id="balanceTimer">2:00</span></h2>
+    <!-- New movement counter -->
+    <div class="movement-display">
+      حركة: <span id="balanceMovementDisplay">0</span>
+    </div>
     <div class="game-controls">
-      <button id="balanceStillBtn" class="btn btn-success">✔️ لم أتحرك</button>
-      <button id="balanceMoveBtn"  class="btn btn-danger">❌ تحركت</button>
+      <button id="balanceStillBtn"  class="btn btn-secondary">ما زلت ثابتًا</button>
+      <button id="balanceMoveBtn"   class="btn btn-danger">لقد تحركت</button>
     </div>
   </div>
 </section>
+
 
 <!-- اختيار الفائز -->
 <section id="balanceSelectWinnerScreen" class="screen">
