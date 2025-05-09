@@ -3,15 +3,13 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   const players = loadPlayers();
-  let roundTime = 10;       // default seconds
+  let roundTime = 100;       // default seconds
   let currentIdx = 0;
   let countdownId = null;
 
-  // shake counter
+  // continuous movement accumulator
   let movementScore = 0;
-  const ACCEL_THRESHOLD = 0.7;  // you can tune this lower/higher
-  let lastShakeTime = 0;
-  const SHAKE_DEBOUNCE = 200;   // ms
+  const ACCEL_THRESHOLD = 0.2;  // very low threshold to catch small movements
 
   // per-player results
   const results = players.map(name => ({
@@ -41,7 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
   backRulesBtn.onclick    = () => showScreen('balanceRulesScreen');
   startBtn.onclick        = () => showScreen('balanceSettingsScreen');
 
-  // slider
+  // slider (10–60 seconds)
+  slider.min = 10; slider.max = 60; slider.step = 1; slider.value = 10;
   slider.addEventListener('input', e => {
     roundTime = +e.target.value;
     timeValue.textContent = `${roundTime} ثانية`;
@@ -66,33 +65,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   passNextBtn.onclick = () => ensureMotionPermission(startRound);
 
-  // request permission if needed, then run cb
   function ensureMotionPermission(cb) {
-    if (typeof DeviceMotionEvent !== 'undefined'
-        && typeof DeviceMotionEvent.requestPermission === 'function') {
+    if (DeviceMotionEvent && DeviceMotionEvent.requestPermission) {
       DeviceMotionEvent.requestPermission()
-        .then(resp => {
-          if (resp === 'granted') {
-            console.log('Motion permission granted');
-            cb();
-          } else {
-            alert('Motion permission denied; لا يمكن متابعة اللعبة.');
-          }
-        })
+        .then(resp => resp==='granted' ? cb() : alert('يرجى تمكين حسّاس الحركة'))
         .catch(console.error);
-    } else {
-      // permission not needed
-      cb();
-    }
+    } else cb();
   }
 
   function startRound() {
     showScreen('balanceGameScreen');
-
     timerDOM.textContent        = formatTime(roundTime);
     movementScore               = 0;
     movementDisplay.textContent = '0';
-    lastShakeTime               = 0;
 
     window.addEventListener('devicemotion', onDeviceMotion);
 
@@ -101,36 +86,32 @@ document.addEventListener('DOMContentLoaded', () => {
     countdownId = setInterval(() => {
       remaining--;
       timerDOM.textContent        = formatTime(remaining);
-      movementDisplay.textContent = movementScore;
+      movementDisplay.textContent = movementScore.toFixed(0);
       if (remaining <= 0) {
         clearInterval(countdownId);
         endRound();
       }
-    }, 1000);
+    }, 100);
   }
 
   function onDeviceMotion(e) {
-    const acc = e.accelerationIncludingGravity || { x:0, y:0, z:0 };
-    const mag = Math.hypot(acc.x, acc.y, acc.z);
-    const now = Date.now();
-    if (mag > ACCEL_THRESHOLD && now - lastShakeTime > SHAKE_DEBOUNCE) {
-      movementScore++;
-      lastShakeTime = now;
-      console.log('Shake counted, total:', movementScore);
-    }
+    const acc = e.accelerationIncludingGravity || { x:0,y:0,z:0 };
+    // amount above threshold
+    const delta = Math.hypot(acc.x,acc.y,acc.z) - ACCEL_THRESHOLD;
+    if (delta > 0) movementScore += delta;
   }
 
   function endRound() {
     clearInterval(countdownId);
     window.removeEventListener('devicemotion', onDeviceMotion);
 
-    results[currentIdx].movement = movementScore;
+    results[currentIdx].movement = Math.round(movementScore);
     currentIdx++;
     nextPass();
   }
 
   function showFinalResults() {
-    const sorted = [...results].sort((a,b) => a.movement - b.movement);
+    const sorted = [...results].sort((a,b)=> a.movement - b.movement);
     if (sorted[0]) sorted[0].roundPoints = 20;
     if (sorted[1]) sorted[1].roundPoints = 10;
     if (sorted[2]) sorted[2].roundPoints = 5;
@@ -138,9 +119,10 @@ document.addEventListener('DOMContentLoaded', () => {
       r.totalPoints += r.roundPoints;
       localStorage.setItem(r.name, r.totalPoints);
     });
-    resultsBody.innerHTML = sorted.map((r,i) => `
+    resultsBody.innerHTML = sorted.map((r,i)=>`
       <tr>
-        <td>${i+1}</td><td>${r.name}</td>
+        <td>${i+1}</td>
+        <td>${r.name}</td>
         <td>${r.movement}</td>
         <td>${r.roundPoints}</td>
         <td>${r.totalPoints}</td>
@@ -150,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function formatTime(sec) {
-    const m = Math.floor(sec/60), s = sec % 60;
+    const m=Math.floor(sec/60), s=sec%60;
     return `${m}:${s.toString().padStart(2,'0')}`;
   }
 
