@@ -57,7 +57,13 @@ document.addEventListener('DOMContentLoaded', () => {
       return alert('اختر مجموعة واحدة على الأقل!');
     }
     order = [];
-    settings.categories.forEach(cat => order.push(...WORDS[cat]));
+    for (const cat of settings.categories) {
+      if (Array.isArray(WORDS[cat])) {
+          order.push(...WORDS[cat]);
+      } else {
+          console.warn(`WORDS[${cat}] is undefined or not an array`);
+      }
+  }
     shuffle(order);
     idx = 0;
     currentPlayer = 0;
