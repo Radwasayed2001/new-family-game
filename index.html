@@ -36,6 +36,293 @@
         <button id="startButton" class="btn btn-start" disabled>ابدأ</button>
       </div>
     </section>
+    <!-- 1. شاشة القوانين -->
+<section id="winkRulesScreen" class="screen">
+  <header class="game-header">
+    <div class="container">
+      <h1 class="game-header-title">😏 لعبة: غمزة</h1>
+    </div>
+  </header>
+  <div class="container">
+    <div class="game-info">
+      <h2 class="game-title">📜 قوانين اللعبة</h2>
+      <ul>
+        <li>👥 عدد اللاعبين: من 5 إلى 12.</li>
+        <li>🔪 القاتل يغمز سرّياً لقتل أبرياء.</li>
+        <li>❓ عند الشك، اضغطوا “SOS” للاجتماع والتصويت.</li>
+        <li>🏆 نقاط الأبرياء: 25 عند اكتشاف القاتل.</li>
+        <li>🏅 نقاط القاتل: 100 إذا نجح في تصفية الجميع.</li>
+      </ul>
+    </div>
+    <div class="buttons-row">
+      <button id="backToGamesBtnWink" class="btn btn-secondary">🔙 العودة للقائمة</button>
+      <button id="startWinkBtn"      class="btn btn-primary">ابدأ ▶️</button>
+    </div>
+  </div>
+</section>
+
+<!-- 2. شاشة الإعداد: تأكيد توزيع الأدوار -->
+<section id="winkSettingsScreen" class="screen">
+  <div class="container">
+    <h2>⚙️ إعدادات اللعبة</h2>
+    <p>عدد اللاعبين: <strong id="winkPlayerCount"></strong></p>
+    <p>سيتم اختيار قاتل واحد عشوائياً.</p>
+    <div class="buttons-row">
+      <button id="backToRulesBtnWink" class="btn btn-secondary">🔙 الرجوع</button>
+      <button id="confirmWinkSettingsBtn" class="btn btn-primary">تأكيد ▶️</button>
+    </div>
+  </div>
+</section>
+
+<!-- 3. شاشة تمرير الهاتف لتعيين القاتل -->
+<section id="winkPassScreen" class="screen">
+  <div class="container">
+    <p id="winkPassText" class="player-name-display">📱 أعطِ الهاتف للاعب...</p>
+    <button id="winkPassNextBtn" class="btn btn-primary">كشف الدور ▶️</button>
+  </div>
+</section>
+
+<!-- 4. شاشة عرض الدور -->
+<section id="winkRoleScreen" class="screen">
+  <div class="container">
+    <h2 id="winkRoleTitle" class="game-header-title"></h2>
+    <p id="winkRoleExplain"></p>
+    <div class="buttons-row">
+      <button id="winkRoleDoneBtn" class="btn btn-primary">تم ▶️</button>
+    </div>
+  </div>
+</section>
+
+<!-- 5. شاشة اللعب: زر الغمزة وSOS -->
+<section id="winkGameScreen" class="screen">
+  <div class="container">
+    <p>الجولة جارية...</p>
+    <div class="buttons-row">
+      <button id="winkSOSBtn" class="btn btn-warning">SOS 🚨</button>
+    </div>
+  </div>
+</section>
+<!-- Pre-vote screen: victim vs suspect -->
+<section id="winkPreVoteScreen" class="screen">
+  <div class="container">
+    <h2>⏳ الجولة قيد التنفيذ</h2>
+    <p>لديكم 15 ثانية لاكتشاف المغمور!</p>
+    <div class="buttons-row">
+      <button id="winkMarkVictimBtn" class="btn btn-warning">تم استهداف لاعب</button>
+      <button id="winkCallVoteBtn"    class="btn btn-danger">التصويت على مشتبه به</button>
+    </div>
+    <p>🕒 <span id="winkPreTimer">15</span>s</p>
+  </div>
+</section>
+
+<!-- Victim selection -->
+<section id="winkVictimScreen" class="screen">
+  <div class="container">
+    <h2>من تم استهدافه؟</h2>
+    <ul id="winkVictimList" class="player-list">
+      <!-- JS will inject one <li><button> per alive player here -->
+    </ul>
+  </div>
+</section>
+
+
+<!-- 6. شاشة الاجتماع والتصويت -->
+<section id="winkVoteScreen" class="screen">
+  <div class="container">
+    <h2>اجتماع تصويت</h2>
+    <!-- Who is voting right now -->
+    <p id="winkVotePrompt" class="game-header-title"></p>
+    <form id="winkVoteForm" class="vote-form">
+      <!-- Radio buttons will be injected into this div -->
+      <div id="winkVoteOptions"></div>
+    </form>
+    <div class="buttons-row">
+      <button id="winkSubmitVoteBtn" class="btn btn-primary">تصويت</button>
+    </div>
+  </div>
+</section>
+<!-- شاشة الإعلان عن براءة المشتبه فيه -->
+<section id="winkInnocentScreen" class="screen">
+  <div class="container">
+    <h2>🙌 براءة!</h2>
+    <p id="winkInnocentText"></p>
+    <div class="buttons-row">
+      <button id="winkInnocentContinueBtn" class="btn btn-primary">استمرار ▶️</button>
+    </div>
+  </div>
+</section>
+
+<!-- 7. شاشة النتائج النهائية للجولة -->
+<section id="winkResultsScreen" class="screen">
+  <div class="container results-container">
+    <h1>🏆 نتيجة الجولة</h1>
+    <p id="winkResultsText"></p>
+    <table class="results-table">
+      <thead>
+        <tr><th>#</th><th>اللاعب</th><th>النقاط</th><th>المجموع الكلي</th></tr>
+      </thead>
+      <tbody id="winkResultsBody"></tbody>
+    </table>
+    <div class="results-actions">
+      <button id="winkReplayBtn" class="btn btn-primary">جولة جديدة 🔄</button>
+      <button id="winkEndBtn"    class="btn btn-secondary">🏠 العودة للقائمة</button>
+    </div>
+  </div>
+</section>
+
+<!-- 1. Rules Screen -->
+<section id="charadesRulesScreen" class="screen">
+  <header class="game-header">
+    <div class="container">
+      <h1 class="game-header-title">🤐 لعبة: بدون كلام</h1>
+    </div>
+  </header>
+  <div class="container">
+    <div class="info-section">
+      <h3>👥 عدد الفرق:</h3>
+      <p>من ٤ إلى ١٢ لاعبًا، يقسمون إلى فريقين.</p>
+    </div>
+    <div class="info-section">
+      <h3>🔹 ما هي اللعبة؟</h3>
+      <p>يمثل أحد أعضاء الفريق صامتًا عنوانًا (فيلم، برنامج، شخصية…)، والفريق الآخر يخمن.</p>
+    </div>
+    <div class="info-section">
+      <h3>🔹 القواعد:</h3>
+      <ul>
+        <li>لا يُسمح بالنطق بأي كلمة أو إصدار صوتٍ مفهوم.</li>
+        <li>إذا تكلم المُمثّل، اضغط “خطأ” وتنتهي الجولة نقطة للفريق المنافس.</li>
+        <li>إذا خمن الفريق بنجاح قبل انتهاء الوقت، يحصل كل لاعب في الفريق على نقاط.</li>
+      </ul>
+    </div>
+    <div class="buttons-row">
+      <button id="backToGamesBtnCharades" class="btn btn-secondary">🔙 العودة للقائمة</button>
+      <button id="startCharadesBtn"      class="btn btn-primary">ابدأ ▶️</button>
+    </div>
+  </div>
+</section>
+
+<!-- 2. Teams & Settings -->
+<!-- شاشة الإعدادات المعدلة -->
+<section id="charadesSettingsScreen" class="screen">
+  <header class="game-header">
+    <div class="container">
+      <h2 class="game-header-title">⚙️ إعدادات بدون كلام</h2>
+    </div>
+  </header>
+  <div class="container">
+    <!-- اختيار تقسيم اللاعبين -->
+    <div class="info-section">
+      <h3>👥 قسّم اللاعبين إلى فريقين:</h3>
+      <form id="teamAssignmentForm" class="team-assignment-form">
+        <!-- سيتم ملؤها ديناميكياً -->
+      </form>
+    </div>
+
+    <!-- إعداد الوقت -->
+    <div class="info-section">
+      <h3>⏲️ زمن التمثيل:</h3>
+      <div class="slider-wrapper">
+        <span>60s</span>
+        <input id="charadesTimeSlider" type="range" min="60" max="120" step="30" value="60">
+        <span id="charadesTimeValue">60 ثانية</span>
+      </div>
+    </div>
+
+    <div class="buttons-row">
+      <button id="backToRulesBtnCharades" class="btn btn-secondary">🔙 رجوع</button>
+      <button id="startCharadesGameBtn"   class="btn btn-primary">ابدأ اللعبة</button>
+    </div>
+  </div>
+</section>
+
+
+<!-- 3. Round Screen -->
+<section id="charadesPassScreen" class="screen">
+  <div class="container">
+    <p id="charadesPassText" class="player-name-display"></p>
+    <button id="charadesPassNextBtn" class="btn btn-dark-outline">
+      على الفريق اختيار لاعب واحد فقط للتمثيل
+      <br>
+      يجب على الفريق الخصم مشاهدة محتوى الشاشة التالية للحكم في حال نجح الفريق في معرفة العنوان
+    </button>
+  </div>
+</section>
+
+<section id="charadesGameScreen" class="screen">
+  <header class="game-header">
+    <div class="container">
+      <h1>🎭 تمثيل صامت</h1>
+    </div>
+  </header>
+  <div class="container">
+    <div class="info-section">
+      <h3 id="charadesTopic">🔖 الموضوع: ...</h3>
+      <h2 id="charadesTitle">🎬 العنوان: ...</h2>
+    </div>
+    <div class="timer-display">
+      <span id="charadesTimer">60s</span>
+    </div>
+    <div class="buttons-row">
+      <button id="charadesCorrectBtn" class="btn btn-success">صحيح ✓</button>
+      <button id="charadesFailBtn"    class="btn btn-danger">خطأ ✗</button>
+      <button id="charadesChangeBtn"  class="btn btn-warning">
+        تغيير الموضوع 🔄 (<span id="charadesChangeCount">2</span>)
+      </button>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- 5. Round Results -->
+<!-- شاشة نتائج الجولة -->
+<section id="charadesRoundResultsScreen" class="screen">
+  <div class="container results-container">
+    <h2>نتائج الجولة</h2>
+    <p id="charadesRoundResultText"></p>
+    <table class="results-table">
+      <thead>
+        <tr>
+          <th>المركز</th>
+          <th>اللاعب</th>
+          <th>نقاط الجولة</th>
+          <th>النقاط الكلية</th>
+        </tr>
+      </thead>
+      <tbody id="charadesRoundResultsBody">
+        <!-- تُملأ ديناميكيًا -->
+      </tbody>
+    </table>
+    <div class="results-actions">
+      <button id="charadesNextRoundBtn" class="btn btn-primary">جولة جديدة</button>
+      <button id="charadesEndGameBtn"   class="btn btn-secondary">إنهاء اللعبة</button>
+    </div>
+  </div>
+</section>
+
+
+<!-- 6. Final Results -->
+<section id="charadesFinalResultsScreen" class="screen">
+  <header class="game-header">
+    <div class="container">
+      <h1>🏆 النتائج النهائية</h1>
+    </div>
+  </header>
+  <div class="container">
+    <table class="results-table">
+      <thead>
+        <tr><th>#</th><th>الفريق</th><th>جولات الفوز</th><th>النقاط</th></tr>
+      </thead>
+      <tbody id="charadesFinalResultsBody"></tbody>
+    </table>
+    <div class="buttons-row">
+      <button id="charadesReplayBtn" class="btn btn-primary">🔄 إعادة اللعب</button>
+      <button id="charadesBackBtn"   class="btn btn-secondary">🏠 العودة للقائمة</button>
+    </div>
+  </div>
+</section>
+
+
     <!-- قواعد لعبة التوازن -->
 <section id="balanceRulesScreen" class="screen">
   <header class="game-header">
@@ -98,9 +385,10 @@
   <div class="container">
     <div id="balancePassText" class="player-name-display"></div>
     <button id="balancePassNextBtn" class="btn btn-black">
-      الدور على <span id="balanceCurrentPlayer"></span><br>
-      لأخفاء الهاتف… ثم اضغط لبدء الوقت
-    </button>
+  <span id="balanceCurrentPlayer"></span><br>
+      امسك الهاتف بثبات أثناء دورك وحاول عدم التحرك و الإلتزام بالحركة المتفق عليها مع باقي اللاعبين. <br>
+      الفائز هو من يحصل على أقل نقاط
+</button>
   </div>
 </section>
 
@@ -1478,5 +1766,7 @@
     <script src="scripts/fastest.js"></script>
     <script src="scripts/kanz.js"></script>
     <script src="scripts/balance.js"></script>
+    <script src="scripts/silent.js"></script>
+    <script src="scripts/wink.js"></script>
   </body>
 </html>

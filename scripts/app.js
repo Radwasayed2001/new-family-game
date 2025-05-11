@@ -65,6 +65,8 @@ function setupEventListeners() {
       else if (card.dataset.gameId === 'fastest') showScreen('fastRulesScreen');
       else if (card.dataset.gameId === 'treasure') showScreen('treasureRulesScreen');
       else if (card.dataset.gameId === 'balance') showScreen('balanceRulesScreen');
+      else if (card.dataset.gameId === 'noSpeech') showScreen('charadesRulesScreen');
+      else if (card.dataset.gameId === 'ghomza') showScreen('winkRulesScreen');
     }
   });
   submitGuessButton.addEventListener('click', calculateResults);
