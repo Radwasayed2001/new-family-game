@@ -3,12 +3,11 @@
 document.addEventListener('DOMContentLoaded', () => {
   const players       = loadPlayers();
   
-
   // --- State ---
   let killerIndex     = null;
   let eliminated      = new Set();
   let scores          = {};
-  const PRE_VOTE_TIME = 15;    // seconds
+  const PRE_VOTE_TIME = 15 * 60;    // now 15 minutes in seconds
 
   // load historic scores
   players.forEach(p => scores[p] = parseInt(localStorage.getItem(p))||0);
@@ -58,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const replayBtn         = document.getElementById('winkReplayBtn');
   const endBtn            = document.getElementById('winkEndBtn');
 
-  // Screen identifiers
+  // Screens
   const settingsScreen    = 'winkSettingsScreen';
   const passScreen        = 'winkPassScreen';
   const roleScreen        = 'winkRoleScreen';
@@ -67,14 +66,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const voteScreen        = 'winkVoteScreen';
   const resultScreen      = 'winkResultsScreen';
 
+  // Helper: format seconds as mm:ss
+  function formatTime(sec) {
+    const m = Math.floor(sec/60), s = sec % 60;
+    return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+  }
+
   // --- Flow ---
   backToGames.onclick    = () => showScreenById('gamesScreen');
   startWink.onclick      = () => {
     if (players.length < 5) {
-       return showAlert('error','لا يمكن اللعب بأقل من 5 لاعبين!');
+      return alert('لا يمكن اللعب بأقل من 5 لاعبين!');
     }
-    showScreenById(settingsScreen)
-
+    showScreenById(settingsScreen);
   };
   backRulesBtn.onclick   = () => showScreenById('winkRulesScreen');
 
@@ -106,13 +110,13 @@ document.addEventListener('DOMContentLoaded', () => {
   function beginPreVote() {
     remaining = players.filter(p => !eliminated.has(p));
     preRemaining = PRE_VOTE_TIME;
-    preTimerEl.textContent = preRemaining;
+    preTimerEl.textContent = formatTime(preRemaining);
     showScreenById(preVoteScreen);
 
     clearInterval(preTimerId);
     preTimerId = setInterval(() => {
       preRemaining--;
-      preTimerEl.textContent = preRemaining;
+      preTimerEl.textContent = formatTime(preRemaining);
       if (preRemaining <= 0) {
         clearInterval(preTimerId);
         beginPreVote();
@@ -130,43 +134,29 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- Victim selection ---
-  // --- Victim selection ---
-function pickVictim() {
-  victimList.innerHTML = '';
-  remaining.forEach(p => {
-    const li = document.createElement('li');
-    const btn= document.createElement('button');
-    btn.textContent = p;
-    btn.className   = 'btn btn-warning player-btn';
-    btn.onclick     = () => {
-      // إذا كان الضحية المُختار هو القاتل نفسه
-      if (players[killerIndex] === p) {
-        // اعرض شاشة خطأ أو رسالة
-        alert('❌ قمتم باستبعاد القاتل. القاتل هو الوحيد من يستطيع الغمز واستبعاد أحد اللاعبين. انتهت الجولة ولا يمكن الإستمرار بدون القاتل');
-        // مباشرةً نعيد تخصيص قاتل جديد ونرجع للقوانين
-        startNewRound();
-      } else {
-        // عملية الاستبعاد العادية
-        eliminated.add(p);
-        startVoting();
-      }
-    };
-    li.appendChild(btn);
-    victimList.appendChild(li);
-  });
-  showScreenById(victimScreen);
-}
-
-// دالة لإعادة ضبط الجولة بالكامل مع قاتل جديد
-function startNewRound() {
-  // اختر قاتل جديد عشوائي
-  killerIndex = Math.floor(Math.random() * players.length);
-  // أفرغ مجموعة المستبعدين
-  eliminated.clear();
-  // عدّل الدفق ليبدأ من كشف الأدوار من جديد
-  showNextRole(0);
-}
-
+  function pickVictim() {
+    victimList.innerHTML = '';
+    remaining.forEach(p => {
+      const li = document.createElement('li');
+      const btn= document.createElement('button');
+      btn.textContent = p;
+      btn.className   = 'btn btn-warning player-btn';
+      btn.onclick     = () => {
+        // إذا استبعدوا القاتل
+        if (players[killerIndex] === p) {
+          alert('❌ قمتم باستبعاد القاتل. انتهت الجولة.');
+          // إعادة بداية الجولة
+          confirmSet.onclick();
+        } else {
+          eliminated.add(p);
+          startVoting();
+        }
+      };
+      li.appendChild(btn);
+      victimList.appendChild(li);
+    });
+    showScreenById(victimScreen);
+  }
 
   // --- Per-player voting ---
   function startVoting() {
@@ -185,10 +175,7 @@ function startNewRound() {
     votePrompt.textContent = `🕵️ ${voter} يصوّت`;
     voteOptions.innerHTML = remaining
       .map(cand => `
-        <label>
-          <input type="radio" name="suspect" value="${cand}">
-          ${cand}
-        </label>
+        <label><input type="radio" name="suspect" value="${cand}"> ${cand}</label>
       `).join('<br>');
     voteOptions.querySelector('input').checked = true;
     voteSubmitBtn.onclick = recordVote;
@@ -217,7 +204,7 @@ function startNewRound() {
       });
       showRoundResult(`✅ اكتشفتم القاتل (${top})! كل بريء يحصل على 25 نقطة`);
     } else {
-      // wrong guess → eliminate then either innocent screen or killer wins
+      // wrong guess → eliminate or killer win
       eliminated.add(top);
       const innocentsLeft = players.length - eliminated.size - 1;
       if (innocentsLeft < 2) {
@@ -226,7 +213,7 @@ function startNewRound() {
         localStorage.setItem(k, scores[k]);
         showRoundResult(`😎 القاتل (${k}) انتصر! يحصل على 100 نقطة`);
       } else {
-        // show innocent screen
+        // innocent reveal
         innocentText.textContent = `اللاعب ${top} بريء وليس هو القاتل.`;
         innocentContinueBtn.onclick = () => beginPreVote();
         showScreenById(innocentScreenId);
@@ -234,7 +221,7 @@ function startNewRound() {
     }
   }
 
-  // Show round result + score table
+  // Show round result + table
   function showRoundResult(txt) {
     resultsText.textContent = txt;
     resultsBody.innerHTML = players.map((p,i) => `
@@ -242,18 +229,12 @@ function startNewRound() {
         <td>${i+1}</td>
         <td>${p}</td>
         <td>${scores[p]}</td>
-        <td>${localStorage.getItem(p) || 0}</td>
+        <td>${localStorage.getItem(p)||0}</td>
       </tr>
     `).join('');
     showScreenById(resultScreen);
   }
 
-  replayBtn.onclick      = () => {
-    if (players.length < 5) {
-       return showAlert('error','لا يمكن اللعب بأقل من 5 لاعبين!');
-    }
-    showScreenById(settingsScreen)
-
-  };
+  replayBtn.onclick = () => confirmSet.onclick();
   endBtn.onclick    = () => showScreenById('gamesScreen');
 });

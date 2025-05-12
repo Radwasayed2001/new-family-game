@@ -1544,11 +1544,6 @@ h2 {
   text-align: center;
   margin-bottom: 1em;
 }
-/* ---- common adjustments ---- */
-.screen { display: none; }
-.screen.active { display: block; }
-.game-header { background: #333; color: #fff; padding: 0.5em 0; }
-.container { max-width: 500px; margin: 0 auto; padding: 1em; }
 
 .btn {
   padding: 0.6em 1.2em;
@@ -1619,3 +1614,155 @@ h2 {
 .player-item input[type="radio"] {
   margin-right: 0.3em;
 }
+/* Apply only to the settings screen */
+#winkSettingsScreen.animated-screen {
+  opacity: 0;
+  animation: fadeInScreen 0.6s ease-out forwards;
+}
+
+/* Slide-up the container, white card */
+#winkSettingsScreen .container {
+  transform: translateY(20px);
+  animation: slideUpContainer 0.6s ease-out forwards;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 600px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Title styling */
+#winkSettingsScreen .settings-title {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+  color: #333;
+  text-align: center;
+}
+
+/* Info paragraphs */
+#winkSettingsScreen .settings-info {
+  color: #555;
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+  text-align: center;
+}
+
+/* Center and space the buttons */
+#winkSettingsScreen .buttons-row {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+/* Animated button base */
+#winkSettingsScreen .btn-animated {
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.3s, transform 0.2s;
+}
+#winkSettingsScreen .btn-animated::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 0; height: 0;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease-out, height 0.4s ease-out;
+}
+#winkSettingsScreen .btn-animated:hover {
+  transform: translateY(-2px);
+}
+#winkSettingsScreen .btn-animated:active::after {
+  width: 200%; height: 200%;
+  transition: 0s;
+}
+
+/* Secondary button */
+#winkSettingsScreen .btn-secondary {
+  background: transparent;
+  border: 2px solid #888;
+  color: #555;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 6px;
+}
+
+/* Primary button */
+#winkSettingsScreen .btn-primary {
+  background: #007bff;
+  border: 2px solid #007bff;
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 6px;
+}
+
+/* Fade & slide keyframes */
+@keyframes fadeInScreen {
+  to { opacity: 1; }
+}
+@keyframes slideUpContainer {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+/* Shared box style for all Wink stages */
+.wink-box {
+  background: var(--color-bg-light);
+  border: 4px dashed var(--color-yellow);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  text-align: center;
+  max-width: 600px;
+  margin: var(--space-xl) auto;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+  animation: wobble 1s;
+}
+
+/* Titles inside the wink-box */
+.wink-box .settings-title,
+.wink-box .game-header-title {
+  font-family: 'Luckiest Guy', cursive;
+  font-size: 2rem;
+  color: var(--color-error);
+  margin-bottom: var(--space-lg);
+}
+
+/* Info text */
+.wink-box .settings-info {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 1.5rem;
+}
+
+/* Player name display style */
+.player-name-display {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #222;
+}
+
+/* Player list buttons */
+.player-list li {
+  list-style: none;
+  margin: 0.5rem 0;
+}
+.player-list .player-btn {
+  width: 100%;
+  padding: 0.6rem;
+  border: 2px solid #007bff;
+  background: #fff;
+  color: #007bff;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: background 0.3s, color 0.3s;
+}
+.player-list .player-btn:hover {
+  background: #007bff;
+  color: #fff;
+}
+

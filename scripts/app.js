@@ -67,6 +67,8 @@ function setupEventListeners() {
       else if (card.dataset.gameId === 'balance') showScreen('balanceRulesScreen');
       else if (card.dataset.gameId === 'noSpeech') showScreen('charadesRulesScreen');
       else if (card.dataset.gameId === 'ghomza') showScreen('winkRulesScreen');
+      else if (card.dataset.gameId === 'jassos') showScreen('spyRulesScreen');
+
     }
   });
   submitGuessButton.addEventListener('click', calculateResults);
