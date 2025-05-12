@@ -3,9 +3,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   const players = loadPlayers();
-  if (players.length < 5 || players.length > 8) {
-    return alert('يتطلب من 5 إلى 8 لاعبين للعب!');
-  }
+  
 
   // State
   let roundSeconds  = 480;  // 8*60
@@ -139,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Validate players before settings
   startRules.onclick = () => {
     if (players.length < 5 || players.length > 8) {
-      alert('يتطلب من 5 إلى 8 لاعبين للعب! حالياً: ' + players.length);
+      showAlert('error', 'يتطلب من 5 إلى 8 لاعبين للعب! حالياً: ' + players.length);
     } else {
       showScreen('spySettingsScreen');
     }
