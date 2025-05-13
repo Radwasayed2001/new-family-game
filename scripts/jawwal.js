@@ -1,9 +1,13 @@
+let timerIdJ = null, wordTimerId = null;
+function clearTimersJ() {
+  clearInterval(timerIdJ);
+  clearInterval(wordTimerId);
+}
 document.addEventListener('DOMContentLoaded', () => {
   const playersJawwal = loadPlayers();
   let settingsJawwal       = { time: 60, categories: [] };
   let order = [], idx = 0;
   let currentPlayerJawwal  = 0, correctCount = 0;
-  let timerIdJ = null, wordTimerId = null;
   const roundResultsJ = [];
 
   // عتبة الميل بالنسبة للـ delta عن baseline
@@ -33,10 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const backGameBtnJ   = document.getElementById('btnBackHeadsUp');
 
   // يمسح كل المؤقتات
-  function clearTimersJ() {
-    clearInterval(timerIdJ);
-    clearInterval(wordTimerId);
-  }
+  
 
   // ضبط نص السلايدر
   timeSlider.addEventListener('input', e => {
@@ -282,4 +283,3 @@ const WORDS = {
     'كندا','أستراليا','البرازيل','الأرجنتين','الهند','الصين','اليابان','كوريا_الجنوبية','المكسيك','روسيا'
   ]
 };
-
