@@ -1,16 +1,15 @@
 // scripts/balance.js
 // Dependencies: loadPlayers(), showScreen(id)
 
-let countdownId = null;
-
 document.addEventListener('DOMContentLoaded', () => {
   const players = loadPlayers();
-  let roundTime = 10;       // default seconds
+  let roundTime = 100;       // default seconds
   let currentIdx = 0;
+  let countdownId = null;
 
   // continuous movement accumulator
   let movementScore = 0;
-  const ACCEL_THRESHOLD = 10;  // very low threshold to catch small movements
+  const ACCEL_THRESHOLD = 0.2;  // very low threshold to catch small movements
 
   // per-player results
   const results = players.map(name => ({
@@ -39,24 +38,19 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('backToGamesBtnBalance').onclick = () => showScreen('gamesScreen');
   backRulesBtn.onclick    = () => showScreen('balanceRulesScreen');
   startBtn.onclick        = () => {
-    if (players.length < 1) {
-      showAlert('error', 'لعبة التوازن تتطلب لاعب واحد على الأقل');
+    if (players.length < 3) {
+      showAlert('error', ' لعبة التوازن تتطلب 3 لاعبين على الأقل للعب! حالياً: ' + players.length);
       return;
-    }
+    } 
     showScreen('balanceSettingsScreen');
   }
 
   // slider (10–60 seconds)
-  slider.min = 10;
-  slider.max = 60;
-  slider.step = 1;
-  slider.value = 10;
+  slider.min = 10; slider.max = 60; slider.step = 1; slider.value = 10;
   slider.addEventListener('input', e => {
     roundTime = +e.target.value;
     timeValue.textContent = `${roundTime} ثانية`;
   });
-  // initialize label
-  timeValue.textContent = `${roundTime} ثانية`;
 
   // after settings → first turn
   launchBtn.onclick = () => {
@@ -78,21 +72,18 @@ document.addEventListener('DOMContentLoaded', () => {
   passNextBtn.onclick = () => ensureMotionPermission(startRound);
 
   function ensureMotionPermission(cb) {
-    if (typeof DeviceMotionEvent !== 'undefined' &&
-        DeviceMotionEvent.requestPermission) {
+    if (DeviceMotionEvent && DeviceMotionEvent.requestPermission) {
       DeviceMotionEvent.requestPermission()
         .then(resp => resp==='granted' ? cb() : alert('يرجى تمكين حسّاس الحركة'))
         .catch(console.error);
-    } else {
-      cb();
-    }
+    } else cb();
   }
 
   function startRound() {
     showScreen('balanceGameScreen');
+    timerDOM.textContent        = formatTime(roundTime);
     movementScore               = 0;
     movementDisplay.textContent = '0';
-    timerDOM.textContent        = formatTime(roundTime);
 
     window.addEventListener('devicemotion', onDeviceMotion);
 
@@ -101,16 +92,17 @@ document.addEventListener('DOMContentLoaded', () => {
     countdownId = setInterval(() => {
       remaining--;
       timerDOM.textContent        = formatTime(remaining);
-      movementDisplay.textContent = movementScore;
+      movementDisplay.textContent = movementScore.toFixed(0);
       if (remaining <= 0) {
         clearInterval(countdownId);
         endRound();
       }
-    }, 10000);
+    }, 100);
   }
 
   function onDeviceMotion(e) {
     const acc = e.accelerationIncludingGravity || { x:0,y:0,z:0 };
+    // amount above threshold
     const delta = Math.hypot(acc.x,acc.y,acc.z) - ACCEL_THRESHOLD;
     if (delta > 0) movementScore += delta;
   }
@@ -146,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function formatTime(sec) {
-    const m = Math.floor(sec/60), s = sec%60;
+    const m=Math.floor(sec/60), s=sec%60;
     return `${m}:${s.toString().padStart(2,'0')}`;
   }
 
