@@ -1,17 +1,15 @@
 // scripts/balance.js
 // Dependencies: loadPlayers(), showScreen(id)
 
-let countdownId = null;
-
+  let countdownId = null;
 document.addEventListener('DOMContentLoaded', () => {
   const players = loadPlayers();
-  let roundTime = 600;      // 10 minutes in seconds
+  let roundTime = 100;       // default seconds
   let currentIdx = 0;
 
-  // movement tracking
+  // continuous movement accumulator
   let movementScore = 0;
-  let motionDetected = false;
-  const ACCEL_THRESHOLD = 0.2;
+  const ACCEL_THRESHOLD = 1;  // very low threshold to catch small movements
 
   // per-player results
   const results = players.map(name => ({
@@ -22,28 +20,37 @@ document.addEventListener('DOMContentLoaded', () => {
   }));
 
   // DOM refs
-  const backRulesBtn    = document.getElementById('backToRulesBtnBalance');
-  const startBtn        = document.getElementById('startBalanceBtn');
-  const launchBtn       = document.getElementById('startBalanceSettingsBtn');
-  const passText        = document.getElementById('balancePassText');
-  const passNextBtn     = document.getElementById('balancePassNextBtn');
-  const timerDOM        = document.getElementById('balanceTimer');
-  const playerDOM       = document.getElementById('balanceCurrentPlayer');
-  const movementDisplay = document.getElementById('balanceMovementDisplay');
-  const resultsBody     = document.getElementById('balanceResultsBody');
-  const replayBtn       = document.getElementById('balanceReplayBtn');
-  const backGamesBtn    = document.getElementById('balanceBackBtn');
+  const slider            = document.getElementById('balanceTimeSlider');
+  const timeValue         = document.getElementById('balanceTimeValue');
+  const backRulesBtn      = document.getElementById('backToRulesBtnBalance');
+  const startBtn          = document.getElementById('startBalanceBtn');
+  const launchBtn         = document.getElementById('startBalanceSettingsBtn');
+  const passText          = document.getElementById('balancePassText');
+  const passNextBtn       = document.getElementById('balancePassNextBtn');
+  const timerDOM          = document.getElementById('balanceTimer');
+  const playerDOM         = document.getElementById('balanceCurrentPlayer');
+  const movementDisplay   = document.getElementById('balanceMovementDisplay');
+  const resultsBody       = document.getElementById('balanceResultsBody');
+  const replayBtn         = document.getElementById('balanceReplayBtn');
+  const backGamesBtn      = document.getElementById('balanceBackBtn');
 
   // navigation
   document.getElementById('backToGamesBtnBalance').onclick = () => showScreen('gamesScreen');
   backRulesBtn.onclick    = () => showScreen('balanceRulesScreen');
   startBtn.onclick        = () => {
     if (players.length < 3) {
-      showAlert('error', 'لعبة التوازن تتطلب 3 لاعبين على الأقل! حالياً: ' + players.length);
+      showAlert('error', ' لعبة التوازن تتطلب 3 لاعبين على الأقل للعب! حالياً: ' + players.length);
       return;
-    }
+    } 
     showScreen('balanceSettingsScreen');
-  };
+  }
+
+  // slider (10–60 seconds)
+  slider.min = 10; slider.max = 60; slider.step = 1; slider.value = 10;
+  slider.addEventListener('input', e => {
+    roundTime = +e.target.value;
+    timeValue.textContent = `${roundTime} ثانية`;
+  });
 
   // after settings → first turn
   launchBtn.onclick = () => {
@@ -74,39 +81,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function startRound() {
     showScreen('balanceGameScreen');
-    movementScore = 0;
-    motionDetected = false;
+    timerDOM.textContent        = formatTime(roundTime);
+    movementScore               = 0;
     movementDisplay.textContent = '0';
-    // initialize display to full roundTime
-    timerDOM.textContent = formatTime(roundTime);
 
     window.addEventListener('devicemotion', onDeviceMotion);
 
     let remaining = roundTime;
     clearInterval(countdownId);
     countdownId = setInterval(() => {
-      // only decrement if we saw motion since last tick
-      if (motionDetected) {
-        remaining--;
-        timerDOM.textContent = formatTime(remaining);
-        movementDisplay.textContent = Math.round(movementScore);
-      }
-      motionDetected = false;  // reset for next second
-
+      remaining--;
+      timerDOM.textContent        = formatTime(remaining);
+      movementDisplay.textContent = movementScore.toFixed(0);
       if (remaining <= 0) {
         clearInterval(countdownId);
         endRound();
       }
-    }, 1000);
+    }, 100);
   }
 
   function onDeviceMotion(e) {
     const acc = e.accelerationIncludingGravity || { x:0,y:0,z:0 };
+    // amount above threshold
     const delta = Math.hypot(acc.x,acc.y,acc.z) - ACCEL_THRESHOLD;
-    if (delta > 0) {
-      movementScore += delta;
-      motionDetected = true;
-    }
+    if (delta > 0) movementScore += delta;
   }
 
   function endRound() {
@@ -140,9 +138,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function formatTime(sec) {
-    const m = Math.floor(sec/60),
-          s = sec%60;
-    return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    const m=Math.floor(sec/60), s=sec%60;
+    return `${m}:${s.toString().padStart(2,'0')}`;
   }
 
   replayBtn.onclick    = () => showScreen('balanceRulesScreen');
