@@ -470,7 +470,7 @@ document.getElementById('nav-players').addEventListener('click', () => {
   clearBoxAllTimers();
   clearInterval(timerIntervalT);
   clearTimersJ();
-  clearInterval(countdownId);
+  //clearInterval(countdownId);
   showScreen('playerScreen');
 });
 document.getElementById('nav-games').addEventListener('click', () => {
@@ -479,7 +479,7 @@ document.getElementById('nav-games').addEventListener('click', () => {
   clearBoxAllTimers();
   clearInterval(timerIntervalT);
   clearTimersJ();
-  clearInterval(countdownId);
+  //clearInterval(countdownId);
   showScreen('gamesScreen');
 });
 document.getElementById('nav-results').addEventListener('click', () => {
@@ -487,7 +487,7 @@ document.getElementById('nav-results').addEventListener('click', () => {
   clearBoxAllTimers() ;
   clearInterval(timerIntervalT);
   clearTimersJ();
-  clearInterval(countdownId);
+  //clearInterval(countdownId);
   loadStoredResults()
 });
 
