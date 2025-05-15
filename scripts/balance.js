@@ -1,11 +1,11 @@
 // scripts/balance.js
 // Dependencies: loadPlayers(), showScreen(id)
-
+let countdownId = null;
 document.addEventListener('DOMContentLoaded', () => {
   const players = loadPlayers();
   let roundTime = 100;       // default seconds
   let currentIdx = 0;
-  let countdownId = null;
+  
 
   // continuous movement accumulator
   let movementScore = 0;
