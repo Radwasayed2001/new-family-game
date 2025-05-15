@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // continuous movement accumulator
   let movementScore = 0;
-  const ACCEL_THRESHOLD = 0.2;  // very low threshold to catch small movements
+  const ACCEL_THRESHOLD = 0.001;  // very low threshold to catch small movements
 
   // per-player results
   const results = players.map(name => ({
