@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
     clearInterval(countdownId);
     window.removeEventListener('devicemotion', onDeviceMotion);
 
-    results[currentIdx].movement = Math.round(movementScore);
+    results[currentIdx].movement = movementScore;
     currentIdx++;
     nextPass();
   }
