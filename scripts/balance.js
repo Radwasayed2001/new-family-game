@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // continuous movement accumulator
   let movementScore = 0;
-  const ACCEL_THRESHOLD = 1;  // very low threshold to catch small movements
+  const ACCEL_THRESHOLD = 0.01;  // very low threshold to catch small movements
 
   // per-player results
   const results = players.map(name => ({
@@ -101,12 +101,12 @@ document.addEventListener('DOMContentLoaded', () => {
     countdownId = setInterval(() => {
       remaining--;
       timerDOM.textContent        = formatTime(remaining);
-      movementDisplay.textContent = Math.round(movementScore);
+      movementDisplay.textContent = movementScore;
       if (remaining <= 0) {
         clearInterval(countdownId);
         endRound();
       }
-    }, 100);
+    }, 10);
   }
 
   function onDeviceMotion(e) {
