@@ -19,11 +19,12 @@ function clearAllTimersSim() {
 }
 
 // تبديل الشاشات + تنظيف المؤقتات
-function showScreenSim(id) {
-  clearAllTimersSim();
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
+// function showScreen(id) {
+//   console.log("ksljflskdjflsdkjflkdsjflk")
+//   clearAllTimersSim();
+//   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+//   document.getElementById(id).classList.add('active');
+// }
 
 document.addEventListener('DOMContentLoaded', () => {
   // تحميل قائمة اللاعبين
@@ -53,10 +54,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // زرّ البدء
   startBtn.addEventListener('click', () => {
-    if (picPlayers.length < 3) {
-      showAlert('error','لعبة الصور المتشابهة تحتاج على الأقل 3 لاعبين.');
-      return;
-    }
+    if (picPlayers.length < 1) {
+      showAlert('error', 'لعبة الصور المتشابهة تتطلب لاعب واحد على الأقل');
+      return; 
+    } 
     resetGame();
     runTurn();
   });
@@ -68,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // زر العودة للقائمة
-  homeBtn.addEventListener('click', () => showScreenSim('gamesScreen'));
+  homeBtn.addEventListener('click', () => showScreen('gamesScreen'));
 
   // 1) دور اللاعب: عدّ تنازلي
   function runTurn() {
@@ -76,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const name = picPlayers[currentIndex];
     displayName.textContent = `📱 دور: ${name}`;
 
-    showScreenSim('countdownScreen');
+    showScreen('countdownScreen');
     let count = 3;
     displayNum.textContent = count;
     displayNum.classList.add('pop');
@@ -98,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 2) عرض الصور
   function startImagePhase() {
-    showScreenSim('imagesScreen');
+    showScreen('imagesScreen');
     setupImages();
   }
 
@@ -203,6 +204,6 @@ document.addEventListener('DOMContentLoaded', () => {
         </tr>
       `).join('');
 
-    showScreenSim('similarResultsScreen');
+    showScreen('similarResultsScreen');
   }
 });

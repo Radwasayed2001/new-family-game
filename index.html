@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ألعاب العائلة</title>
+    <title>ألعاب قصة</title>
     <link rel="stylesheet" href="styles/reset.css">
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/animations.css">
@@ -20,7 +20,7 @@
     
     <section id="playerScreen" class="screen active">
       <div class="container">
-        <h1 class="title">ألعاب العائلة</h1>
+        <h1 class="title">ألعاب قصة</h1>
         <div class="player-input">
           <input type="text" id="playerName" placeholder="اسم اللاعب"
             maxlength="20">
@@ -101,7 +101,7 @@
 
 <!-- 2a. Pass phone to the next player -->
 <section id="spyPassPlayerScreen" class="screen">
-  <div class="container secret-box">
+  <div class="secret-box">
     <p id="spyPassPlayerText" class="player-name-display">📱 أعطِ الهاتف للاعب …</p>
     <button id="spyPassPlayerBtn" class="btn btn-primary">أنا …</button>
   </div>
@@ -109,7 +109,7 @@
 
 <!-- 3. Reveal role & location -->
 <section id="spyRevealScreen" class="screen">
-  <div class="container secret-box">
+  <div class="secret-box">
     <p id="spyRevealPrompt" class="game-header-title">اضغط لمعرفة دورك</p>
     <button id="spyConfirmRevealBtn" class="btn btn-primary">كشف الدور ▶️</button>
     <h2 id="spyRevealTitle" class="game-header-title" style="display:none;"></h2>
@@ -522,7 +522,7 @@
   <div class="container">
     <div class="game-info">
       <h2 class="game-title">📜 قوانين اللعبة</h2>
-      <p>عدد اللاعبين: من 3 إلى 12 لاعب.</p>
+      <p>عدد اللاعبين: من 1 إلى 12 لاعب.</p>
       <p>لعبة حركية تتطلب ثباتاً وتركيزاً! 🏃‍♂️</p>
       <ol>
         <li>اتفقوا على حركة توازن (وقوف على رجل واحدة، أو أطراف الأصابع…).</li>
@@ -547,8 +547,9 @@
   <div class="container">
     <div class="info-section">
       <h3>⏲️ زمن الجولة:</h3>
+
+      <small>اختر من 10 إلى 60 ثانية</small>
       <div class="slider-wrapper">
-        <span>10s</span>
         <input
           id="balanceTimeSlider"
           type="range"
@@ -559,7 +560,6 @@
         >
         <span id="balanceTimeValue">10 ثانية</span>
       </div>
-      <small>اختر من 10 إلى 60 ثانية</small>
     </div>
     <div class="buttons-row">
       <button id="backToRulesBtnBalance" class="btn btn-secondary">🔙 الرجوع</button>
@@ -651,8 +651,8 @@
           </p>
     
           <div class="buttons">
-            <button id="nextButton" onclick="showScreen('gameSettingsScreen')" class="btn btn-primary">التالي</button>
-            <button id="backToMenuButtonT" class="btn btn-secondary">الرجوع</button>
+            <button id="nextButton"  class="btn btn-primary">التالي</button>
+            <button id="backToMenuButtonT" onclick="showScreen('gamesScreen')" class="btn btn-secondary">الرجوع</button>
           </div>
         </div>
       </div>
@@ -987,6 +987,52 @@
 
     <!-- Jawwal on Head Rules Screen -->
     <!-- Jawwal on Head Rules Screen -->
+     <!-- Jawwal Rules Screen -->
+<section id="jawwalRulesScreen" class="screen">
+  <header class="game-header">
+    <div class="container">
+      <h1 class="game-header-title">📱 لعبة: الجوال على الرأس</h1>
+    </div>
+  </header>
+
+  <div class="container">
+    <h2 class="game-title">📜 قوانين لعبة الجوال على الرأس</h2>
+
+    <div class="game-info">
+      <h3>👥 عدد اللاعبين:</h3>
+      <p>من 2 إلى 12 لاعب.</p>
+
+      <h3>💡 فكرة اللعبة:</h3>
+      <p>
+        "الجوال على الرأس" هي لعبة اجتماعية ممتعة وملئة بالإثارة 🔥، تعتمد على السرعة ⏱️ والذكاء 🧠 في تخمين الكلمات من مواضيع متنوعة 🎯.
+      </p>
+
+      <h3>🎮 كيفية اللعب:</h3>
+      <ul>
+        <li>🔹 اختر الفئات المفضلة لديك مع أصدقائك.</li>
+        <li>⏳ حددوا الوقت المخصص لكل جولة.</li>
+        <li>📱 ضع الهاتف على جبينك بحيث لا ترى الشاشة.</li>
+        <li>🗣️ يقوم أصدقاؤك بوصف الكلمة باستخدام التلميحات والكلمات.</li>
+        <li>🤔 حاول تخمين الكلمة بأسرع وقت ممكن!</li>
+        <li>✅ إذا خمّنتها بشكل صحيح، أمل الهاتف للأمام لاحتساب النقطة.</li>
+        <li>❌ إذا لم تستطع تخمين الكلمة، أمل الهاتف للخلف لتخطي الكلمة.</li>
+        <li>⚠️ تذكّر: الوقت يمر بسرعة، فلا تتوقف كثيرًا عند الكلمات الصعبة!</li>
+      </ul>
+
+      <h3>🏆 الفوز:</h3>
+      <ul>
+        <li>✨ يحصل كل لاعب على 5 نقاط لكل كلمة يتم تخمينها بشكل صحيح.</li>
+        <li>👑 اللاعب الذي يجمع أكبر عدد من النقاط يفوز بالجولة!</li>
+      </ul>
+    </div>
+
+    <div class="buttons-row">
+      <button id="backToGamesBtnJawwal" onclick="showScreen('gamesScreen')" class="btn btn-secondary">🔙 الرجوع</button>
+      <button id="startJawwalBtn" onclick="startJawwalGame()" class="btn btn-primary">ابدأ ▶️</button>
+    </div>
+  </div>
+</section>
+
     <section id="headsUpSettings" class="screen">
       <header class="game-header">
         <div class="container">
@@ -1001,13 +1047,13 @@
           <!-- إعداد الوقت -->
           <div class="info-section">
             <h3>⏲️ زمن التحدي:</h3>
+
+            <small>اختر دقيقة، دقيقة ونصف، أو دقيقتين</small>
             <div class="slider-wrapper">
-              <span>1:00</span>
               <input id="timeSlider" type="range" min="60" max="120" step="30"
                 value="60">
               <span id="timeValue">1 دقيقة</span>
             </div>
-            <small>اختر دقيقة، دقيقة ونصف، أو دقيقتين</small>
           </div>
 
           <!-- قائمة الاختيارات -->
@@ -1147,7 +1193,7 @@
 
           <div class="info-section">
             <h3>👥 عدد اللاعبين المقترح:</h3>
-            <p>من 3 إلى 12 لاعب</p>
+            <p>من 1 إلى 12 لاعب</p>
           </div>
 
           <div class="info-section">
@@ -1191,7 +1237,8 @@
 
         <button id="startSimilarBtn" class="btn btn-start">بدء اللعبة
           ▶️</button>
-        <button class="btn btn-secondary">العودة للقائمة</button>
+          <button class="btn btn-secondary" onclick="showScreen('gamesScreen')">العودة للقائمة</button>
+
       </div>
     </section>
     <section id="countdownScreen" class="screen">
@@ -1334,7 +1381,7 @@
         </div>
 
         <div class="buttons-row">
-          <button id="backToGamesBtn" class="btn btn-secondary">🔙 العودة
+          <button id="backToGamesBtn" onclick="showScreen('gamesScreen')" class="btn btn-secondary">🔙 العودة
             للقائمة</button>
           <button id="startBoxesBtn" class="btn btn-primary">▶️ بدء
             اللعبة</button>
@@ -1573,7 +1620,7 @@
 
         <button id="startMafiaGameButton" onclick="startMafiaGame()"
           class="btn btn-start">بدء اللعبة</button>
-        <button class="btn btn-secondary">العودة للقائمة</button>
+        <button class="btn btn-secondary" onclick="showScreen('gamesScreen')">العودة للقائمة</button>
       </div>
     </section>
 
@@ -1958,5 +2005,7 @@
     <script src="scripts/silent.js"></script>
     <script src="scripts/wink.js"></script>
     <script src="scripts/spy.js"></script>
+    <script src="scripts/clearTimers.js"></script>
+    <script src="scripts/players.js"></script>
   </body>
 </html>

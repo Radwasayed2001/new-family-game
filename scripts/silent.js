@@ -74,7 +74,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // تنقل بين الشاشات
   backToGames.onclick   = () => showScreen('gamesScreen');
-  startRulesBtn.onclick = () => showScreen('charadesSettingsScreen');
+  startRulesBtn.onclick = () => {
+    if (players.length < 4) {
+      showAlert('error', ' لعبة بدون كلام تتطلب 4 لاعبين على الأقل للعب! حالياً: ' + players.length);
+      return;
+    } 
+    showScreen('charadesSettingsScreen');
+  }
   backRulesBtn.onclick  = () => showScreen('charadesRulesScreen');
 
   // تقسيم الفرق

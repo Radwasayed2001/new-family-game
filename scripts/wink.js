@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
   backToGames.onclick    = () => showScreenById('gamesScreen');
   startWink.onclick      = () => {
     if (players.length < 5) {
-      return alert('لا يمكن اللعب بأقل من 5 لاعبين!');
+      return showAlert('error','لا يمكن اللعب بأقل من 5 لاعبين!');
     }
     showScreenById(settingsScreen);
   };
@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (top === players[killerIndex]) {
       // innocents win
-      remaining.filter(p => p !== top).forEach(p => {
+      players.filter(p => p !== top).forEach(p => {
         scores[p] += 25;
         localStorage.setItem(p, scores[p]);
       });
