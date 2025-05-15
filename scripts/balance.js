@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(countdownId);
         endRound();
       }
-    }, 1000);
+    }, 500);
   }
 
   function onDeviceMotion(e) {
