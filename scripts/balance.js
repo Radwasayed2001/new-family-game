@@ -4,7 +4,7 @@
 let countdownId = null;
 document.addEventListener('DOMContentLoaded', () => {
   const players = loadPlayers();
-  let roundTime = 10;       // default seconds
+  let roundTime = 1000;       // default seconds
   let currentIdx = 0;
 
   // continuous movement accumulator
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(countdownId);
         endRound();
       }
-    }, 1000);
+    }, 10);
   }
 
   function onDeviceMotion(e) {
