@@ -4,12 +4,13 @@
 let countdownId = null;
 document.addEventListener('DOMContentLoaded', () => {
   const players = loadPlayers();
-  let roundTime = 1000;       // default seconds
+  let roundTime = 10;       // default seconds
   let currentIdx = 0;
+  let prevMag = null;
 
   // continuous movement accumulator
   let movementScore = 0;
-  const ACCEL_THRESHOLD = 0.001;  // very low threshold to catch small movements
+  const ACCEL_THRESHOLD = 0.2;  // very low threshold to catch small movements
 
   // per-player results
   const results = players.map(name => ({
@@ -83,29 +84,37 @@ document.addEventListener('DOMContentLoaded', () => {
     showScreen('balanceGameScreen');
     timerDOM.textContent        = formatTime(roundTime);
     movementScore               = 0;
+    prevMag                     = null;      // إعادة ضبط القراءة السابقة
     movementDisplay.textContent = '0';
-
+  
     window.addEventListener('devicemotion', onDeviceMotion);
-
+  
     let remaining = roundTime;
     clearInterval(countdownId);
     countdownId = setInterval(() => {
       remaining--;
-      timerDOM.textContent = formatTime(Math.round(remaining/100));
-      movementDisplay.textContent = movementScore.toFixed(0)/100;
+      timerDOM.textContent        = formatTime(remaining);
+      movementDisplay.textContent = movementScore.toFixed(0);
       if (remaining <= 0) {
         clearInterval(countdownId);
         endRound();
       }
-    }, 10);
+    }, 1000);  // كل ثانية فقط
   }
+  
 
   function onDeviceMotion(e) {
     const acc = e.accelerationIncludingGravity || { x:0,y:0,z:0 };
-    // amount above threshold
-    const delta = Math.hypot(acc.x,acc.y,acc.z) - ACCEL_THRESHOLD;
-    if (delta > 0) movementScore += delta;
+    const mag = Math.hypot(acc.x, acc.y, acc.z);
+    if (prevMag !== null) {
+      const delta = Math.abs(mag - prevMag);
+      if (delta > ACCEL_THRESHOLD) {
+        movementScore += delta;
+      }
+    }
+    prevMag = mag;
   }
+  
 
   function endRound() {
     clearInterval(countdownId);
