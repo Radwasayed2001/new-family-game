@@ -91,8 +91,8 @@ document.addEventListener('DOMContentLoaded', () => {
     clearInterval(countdownId);
     countdownId = setInterval(() => {
       remaining--;
-      timerDOM.textContent        = formatTime(remaining);
-      movementDisplay.textContent = movementScore.toFixed(0);
+      timerDOM.textContent = formatTime(Math.round(remaining/100));
+      movementDisplay.textContent = movementScore.toFixed(0)/100;
       if (remaining <= 0) {
         clearInterval(countdownId);
         endRound();
